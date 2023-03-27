@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1057460991601",
+    "project_id": "norbit-cc77c",
+    "storage_bucket": "norbit-cc77c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057460991601:android:032e75e1278632471acdd0",
+        "android_client_info": {
+          "package_name": "com.norbitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057460991601-h03ukd0c5djsiiopplirgt8c56j6d06d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiJt-idxOsWQQGEtSFsPHj7ArjP5uwc5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057460991601-h03ukd0c5djsiiopplirgt8c56j6d06d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

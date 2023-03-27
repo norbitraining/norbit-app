@@ -1,140 +1,123 @@
-import axios from 'axios';
-import {HTTP_SERVER_UNAVAILABLE, BEARER_TOKEN_NAME} from 'utils/constants/api';
-import ENV from 'config/env';
-import AsyncStorage from '@react-native-community/async-storage';
+import axios from './axios';
+import {BEARER_TOKEN_NAME} from 'utils/constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {log} from 'utils';
 
-export const BASE_API = ENV.API_PATH;
 export const VERSION = 'v1';
 export const BEARER_TOKEN = '';
 
 class Api {
-  async get(uri: string, data = null): Promise<any> {
-    const url = `${BASE_API}${uri}`;
+  get = async (uri: string, data = null): Promise<any> => {
     try {
+      log('-------------Get Url----------', JSON.stringify(uri));
       const headers = await this.getHeaders();
-      console.log('-------------Get Url----------', JSON.stringify(url));
-      const result = await axios.get(url, {headers, params: data});
-      console.log('-------------Response----------');
+      const result = await axios.get(uri, {headers, params: data});
       return result.data;
     } catch (e: any) {
-      //   if (e.response?.status === 401) {
-      //     try {
-      //       // await this.postToken(null, true);
-      //       return this.get(uri);
-      //     } catch (ex) {
-      //       return Promise.reject(ex);
-      //     }
-      //   }
+      if (e.response?.status === 401) {
+        try {
+          await this.postNewToken();
+          return this.get(uri);
+        } catch (ex) {
+          return Promise.reject(ex);
+        }
+      }
       throw e;
     }
-  }
+  };
 
-  async delete(uri: string): Promise<any> {
-    const url = `${BASE_API}${uri}`;
+  delete = async (uri: string): Promise<any> => {
     try {
       const headers = await this.getHeaders();
-      const result = await axios.delete(url, {headers});
+      const result = await axios.delete(uri, {headers});
       return result.data;
     } catch (e: any) {
-      //   if (e.response?.status === 401) {
-      //     try {
-      //       // await this.postToken(null, true);
-      //       return this.delete(uri);
-      //     } catch (ex) {
-      //       return Promise.reject(ex);
-      //     }
-      //   }
-      return e.response?.status;
-    }
-  }
-
-  async put(uri: string, body: any, returnRequest = false) {
-    const headers = await this.getHeaders();
-    try {
-      const request = await axios.put(`${BASE_API}${uri}`, body, {
-        headers,
-      });
-      if (returnRequest) {
-        return request;
-      }
-      try {
-        if (request.status === 500) {
-          return Promise.reject({code: HTTP_SERVER_UNAVAILABLE});
-        }
-        const response = await request.data;
-        return response;
-      } catch (e) {
-        return request;
-      }
-    } catch (e: any) {
-      //   if (e.response?.status === 401) {
-      //     try {
-      //       // await this.postToken(null, true);
-      //       return this.put(uri);
-      //     } catch (ex) {
-      //       return Promise.reject(ex);
-      //     }
-      //   }
-      return e.response?.status;
-    }
-  }
-
-  async patch(uri: string, body: any): Promise<any> {
-    const headers = await this.getHeaders();
-    try {
-      const request = await axios.patch(`${BASE_API}${uri}`, body, {
-        headers,
-      });
-
-      try {
-        if (request.status === 500) {
-          return Promise.reject({code: HTTP_SERVER_UNAVAILABLE});
-        }
-        const response = await request.data;
-        return response;
-      } catch (e) {
-        return request;
-      }
-    } catch (e: any) {
-      //   if (e.response?.status === 401) {
-      //     try {
-      //       // await this.postToken(null, true);
-      //       return this.patch(uri, body);
-      //     } catch (ex) {
-      //       return Promise.reject(ex);
-      //     }
-      //   }
-      return e.response?.status;
-    }
-  }
-
-  async post(uri: string, body: any, returnRequest = false): Promise<any> {
-    const headers = await this.getHeaders();
-    const url = `${BASE_API}${uri}`;
-    try {
-      console.log('-------------Post Url----------', url);
-      const request = await axios.post(url, body, {
-        headers,
-      });
-      if (returnRequest) {
-        return request;
-      }
-
-      const response = await request.data;
-      return response;
-    } catch (e: any) {
-      console.log('-------------Post ERROR----------', JSON.stringify(e));
-      /*if (e.response?.status === 401) {
+      if (e.response?.status === 401) {
         try {
-          // await this.postToken(null, true);
+          await this.postNewToken();
+          return this.delete(uri);
+        } catch (ex) {
+          return Promise.reject(ex);
+        }
+      }
+      return e.response?.status;
+    }
+  };
+
+  put = async (uri: string, body: any): Promise<any> => {
+    const headers = await this.getHeaders();
+    try {
+      const {data} = await axios.put(uri, body, {
+        headers,
+      });
+      return data;
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        try {
+          await this.postNewToken();
+          return this.put(uri, body);
+        } catch (ex) {
+          return Promise.reject(ex);
+        }
+      }
+      return e.response?.status;
+    }
+  };
+
+  patch = async (uri: string, body: any): Promise<any> => {
+    const headers = await this.getHeaders();
+    try {
+      const {data} = await axios.patch(uri, body, {
+        headers,
+      });
+
+      return data;
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        try {
+          await this.postNewToken();
+          return this.patch(uri, body);
+        } catch (ex) {
+          return Promise.reject(ex);
+        }
+      }
+      return e.response?.status;
+    }
+  };
+
+  post = async (uri: string, body: any): Promise<any> => {
+    const headers = await this.getHeaders();
+    try {
+      const {data} = await axios.post(uri, body, {
+        headers,
+      });
+      return data;
+    } catch (e: any) {
+      log('-------------Post ERROR----------', JSON.stringify(e));
+      if (e.response?.status === 401) {
+        try {
+          await this.postNewToken();
           return this.post(uri, body);
         } catch (ex) {
           return Promise.reject(ex);
         }
-      }*/
+      }
       throw e;
     }
-  }
+  };
+
+  postNewToken = async () => {
+    const headers = await this.getHeaders();
+    log('-------------Post Refresh----------', headers);
+    try {
+      const {data} = await axios.get(`/${VERSION}/user/refresh`, {headers});
+      this.setAuthorization(data.token);
+      return data;
+    } catch (e: any) {
+      log('-------------Post Refresh ERROR----------', JSON.stringify(e));
+      throw {e, isEndSession: true};
+    }
+  };
 
   isJson = (str: string) => {
     try {
@@ -159,20 +142,19 @@ class Api {
     return null;
   };
 
-  async getHeaders() {
+  getHeaders = async () => {
     const headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: '',
     };
 
-    const authorization = this.getAuthorization();
+    const authorization = await this.getAuthorization();
     if (authorization !== null) {
       headers.Authorization = `Bearer ${authorization}`;
     }
-
     return headers;
-  }
+  };
 }
 
 export default new Api();

@@ -16,13 +16,14 @@ module.exports = {
           theme: './src/theme',
           types: './src/types',
           utils: './src/utils',
+          font: './src/font',
         },
       },
     ],
     [
       'module:react-native-dotenv',
       {
-        whitelist: ['API_URL', 'ENV'],
+        whitelist: ['API_PATH', 'ENV'],
         moduleName: 'env',
         path: '.env',
       },

@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  View,
-  StyleSheet,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage, {Source} from 'react-native-fast-image';
@@ -14,6 +8,7 @@ import {GlobalStyles} from 'theme/globalStyle';
 
 export interface ButtonProps {
   source: Source;
+  colors?: (string | number)[];
 }
 
 const BackgroundContainer: React.FC<React.PropsWithChildren<ButtonProps>> = ({

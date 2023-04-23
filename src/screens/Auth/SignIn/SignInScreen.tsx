@@ -21,6 +21,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Button from 'components/Button';
 import {userActions} from 'store/reducers/user';
 import {useSelector} from 'store/reducers/rootReducers';
+import {navigationRef, Screen} from 'router/Router';
 
 const BEHAVIOR = isAndroid ? undefined : 'padding';
 
@@ -54,6 +55,10 @@ const SignInScreen: React.FC<SignInScreenProps> = ({signInAction}) => {
       password: 'Ernesto1.',
     },
   });
+
+  const handleForgotPassword = () => {
+    navigationRef.navigate(Screen.FORGOT_PASSWORD);
+  };
 
   const onSubmit = async () => {
     const values = getValues();
@@ -125,7 +130,7 @@ const SignInScreen: React.FC<SignInScreenProps> = ({signInAction}) => {
               rules={{required: true}}
             />
             <View style={styles.contentButtonAuthForm}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleForgotPassword}>
                 <Text
                   fontSize={14}
                   weight="Light"

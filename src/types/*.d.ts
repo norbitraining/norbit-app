@@ -1,3 +1,17 @@
+import {Screen} from 'router/Router';
+
+export type AppRootParamList = {
+  [Screen.SIGN_IN]: undefined;
+  [Screen.SIGN_IN_CHANGE_PASSWORD]: undefined;
+  [Screen.CONFIRMATION_SUCCESS]: {type: Screen; extraData?: Object};
+  [Screen.FORGOT_PASSWORD]: undefined;
+  [Screen.CALENDAR]: undefined;
+  [Screen.PROFILE]: undefined;
+  [Screen.CHANGE_PASSWORD_SETTINGS]: undefined;
+  [Screen.CALENDAR_STACK]: undefined;
+  [Screen.SETTINGS_STACK]: undefined;
+};
+
 declare global {
   declare module '*.png';
   namespace ReactNavigation {

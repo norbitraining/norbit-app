@@ -27,6 +27,7 @@ export interface IUserRequest {
   blocked?: boolean;
   email?: string;
   deleted?: string;
+  birthday?: Date | string;
   create_at?: Date;
   update_at?: Date;
 }
@@ -76,6 +77,17 @@ export const userSlice = createSlice({
       state.isLoggedIn = true;
       state.error = null;
     },
+    updateProfileAction: (state, action: PayloadAction<IUserRequest>) => {
+      action.payload.first_name;
+      action.payload.last_name;
+      action.payload.birthday;
+      action.payload.gender;
+      action.payload.height;
+      action.payload.height_measurement;
+      action.payload.weight;
+      action.payload.weight_measurement;
+      state.isLoading = true;
+    },
     signInCleanState: state => {
       state.isLoading = false;
       state.error = null;
@@ -109,15 +121,28 @@ export const userSlice = createSlice({
       action.payload.email;
       state.isLoading = true;
     },
+    updateProfileSuccess: (
+      state,
+      action: PayloadAction<IUserRequest | undefined>,
+    ) => {
+      action.payload && (state.user = action.payload);
+      state.isLoading = false;
+      state.error = null;
+    },
     forgotPasswordSuccess: state => {
       state.isLoading = false;
       state.error = null;
     },
-    changePasswordAction: (
+    changePasswordSuccess: state => {
+      state.isLoading = false;
+      state.error = null;
+    },
+    changePasswordSettingsAction: (
       state,
-      action: PayloadAction<{password: string}>,
+      action: PayloadAction<{currentPassword: string; newPassword: string}>,
     ) => {
-      action.payload.password;
+      action.payload.currentPassword;
+      action.payload.newPassword;
       state.isLoading = true;
     },
     changePasswordAuthenticatedAction: (
@@ -127,12 +152,11 @@ export const userSlice = createSlice({
       action.payload.password;
       state.isLoading = true;
     },
-    changePasswordSuccess: state => {
+    changePasswordSettingsSuccess: state => {
       state.isLoading = false;
       state.error = null;
     },
-    userFailed: (state, action: PayloadAction<Error>) => {
-      state.error = action.payload;
+    userFailed: state => {
       state.isLoading = false;
     },
     setLogoutUser: state => {

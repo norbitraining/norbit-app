@@ -18,11 +18,14 @@ import Text, {TextCustomProps} from './Text';
 import {fontMaker} from 'font';
 import {GlobalStyles} from 'theme/globalStyle';
 
+export type InputTheme = 'light' | 'dark';
+
 const HIT_SLOP = {left: 25, right: 20, bottom: 30, top: 30};
 
 export interface InputProps {
   customStyle?: StyleProp<ViewStyle>;
   customLabel?: StyleProp<ViewStyle>;
+  theme?: InputTheme;
   textInputProps: TextInputProps;
   iconProps?: IconProps;
   labelProps?: TextCustomProps;
@@ -36,6 +39,7 @@ export interface InputProps {
 const defaultProps: InputProps = {
   iconProps: {name: ''},
   textInputProps: {},
+  theme: 'dark',
   labelProps: {fontSize: 14},
   isPassword: false,
 };
@@ -45,6 +49,7 @@ const TextInputComponent: React.FC<InputProps> = ({
   labelProps,
   labelErrorProps,
   isPassword,
+  theme,
   label,
   error,
 }) => {
@@ -57,18 +62,31 @@ const TextInputComponent: React.FC<InputProps> = ({
       <View style={styles.contentLabel}>
         <Text
           weight="Medium"
-          color={EStyleSheet.value('$colors_white')}
-          fontSize={rHeight(labelProps?.fontSize || 14)}>
+          color={EStyleSheet.value(
+            theme === 'light' ? '$colors_dark' : '$colors_white',
+          )}
+          fontSize={labelProps?.fontSize || 14}>
           {label}
         </Text>
       </View>
-      <View style={[styles.contentInput, GlobalStyles.row]}>
+      <View
+        style={[
+          theme === 'light' ? styles.contentInputDark : styles.contentInput,
+          GlobalStyles.row,
+        ]}>
         <TextInput
-          placeholderTextColor={EStyleSheet.value('$colors_gray')}
+          placeholderTextColor={
+            theme === 'light'
+              ? 'rgba(0,0,0,0.5)'
+              : EStyleSheet.value('$colors_gray')
+          }
           autoCapitalize="none"
           {...textInputProps}
           secureTextEntry={isPassword && !showPassword}
-          style={[styles.input, textInputProps.style]}
+          style={[
+            theme === 'light' ? styles.inputDark : styles.input,
+            textInputProps.style,
+          ]}
         />
 
         {isPassword && (
@@ -78,7 +96,9 @@ const TextInputComponent: React.FC<InputProps> = ({
             hitSlop={HIT_SLOP}
             onPress={onPressShowPassword}>
             <Icon
-              color={EStyleSheet.value('$colors_white')}
+              color={EStyleSheet.value(
+                theme === 'light' ? '$colors_dark' : '$colors_white',
+              )}
               name={showPassword ? 'eye' : 'eye-off'}
               size={rHeight(16)}
             />
@@ -101,6 +121,25 @@ const TextInputComponent: React.FC<InputProps> = ({
 
 export default withDefaults(TextInputComponent, defaultProps);
 
+const inputStyle = {
+  height: rHeight(40),
+  fontSize: fontNormalize(13),
+  flex: 1,
+  color: '$colors_white',
+  ...fontMaker({weight: 'Regular'}),
+} as const;
+
+const contentInputStyle = {
+  height: rHeight(40),
+  fontSize: fontNormalize(13),
+  width: '100%',
+  justifyContent: 'center',
+  backgroundColor: '$colors_inputColorDark',
+  paddingLeft: '5%',
+  paddingRight: '3%',
+  borderRadius: 5,
+} as const;
+
 const styles = StyleSheet.create({
   contentIcon: {paddingRight: 5},
   contentError: {
@@ -122,20 +161,19 @@ const styles = StyleSheet.create({
     color: '$colors_white',
   },
   input: {
-    height: rHeight(40),
-    fontSize: fontNormalize(14),
-    flex: 1,
-    color: '$colors_white',
-    ...fontMaker({weight: 'Regular'}),
+    ...inputStyle,
+  },
+  inputDark: {
+    ...inputStyle,
+    color: '$colors_dark',
   },
   contentInput: {
-    height: rHeight(40),
-    fontSize: fontNormalize(14),
-    width: '100%',
-    justifyContent: 'center',
-    backgroundColor: '$colors_inputColorDark',
-    paddingLeft: '5%',
-    paddingRight: '3%',
-    borderRadius: 5,
+    ...contentInputStyle,
+  },
+  contentInputDark: {
+    ...contentInputStyle,
+    backgroundColor: '$colors_white',
+    borderColor: '#CFD0E2',
+    borderWidth: 1,
   },
 });

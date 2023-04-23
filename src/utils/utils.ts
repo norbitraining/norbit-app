@@ -1,4 +1,7 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
+import Toast from 'react-native-toast-message';
+import {LabelError} from './text';
+import {PlanningActivityType} from 'store/reducers/planning';
 
 export const isAndroid = Platform.OS === 'android';
 
@@ -57,4 +60,36 @@ export const withDefaults = <P, DP>(
   type Props = Partial<DP> & Omit<P, keyof DP>;
   component.defaultProps = defaultProps;
   return component as React.ComponentType<Props>;
+};
+
+export const normalizeCatchActions = (codeError?: keyof typeof LabelError) => {
+  const translateError = LabelError[codeError || 'generic'];
+  Toast.show({
+    type: 'error',
+    text1: translateError,
+  });
+};
+
+export const getLabelActivityType = (
+  activityType: PlanningActivityType,
+  numberOfRounds?: number,
+) => {
+  if (activityType === 'none') {
+    return '';
+  }
+  if (activityType === 'emom') {
+    return 'Emom';
+  }
+  if (activityType === 'fortime') {
+    return 'Fortime';
+  }
+  if (activityType === 'amrap') {
+    return 'Amrap';
+  }
+  if (activityType === 'round' && numberOfRounds) {
+    return numberOfRounds > 1 ? ' Rondas' : ' Ronda';
+  }
+  if (activityType === 'tabata') {
+    return 'Tabata';
+  }
 };

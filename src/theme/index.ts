@@ -1,10 +1,10 @@
-import createPalette, {Palette, PaletteType} from './palette';
+import createPalette, {Palette} from './palette';
 export interface Theme {
   colors: Palette;
 }
 
 export interface ThemeInput {
-  palette?: PaletteType;
+  palette?: Palette;
 }
 
 const createTheme = (options: ThemeInput): Theme => {

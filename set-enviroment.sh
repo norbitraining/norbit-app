@@ -3,7 +3,7 @@
 if [ "$1" == "dev" ] || [ "$1" == "prod" ] || [ "$1" == "local" ];
 then
   ENV=$1;
-  cp -rf ".env.$ENV" .env
+  cp -rf "env.$ENV" .env
   echo "Switching to $ENV"
   echo "Finish"
   else

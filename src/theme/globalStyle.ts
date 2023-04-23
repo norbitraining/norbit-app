@@ -5,12 +5,26 @@ const GlobalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '$colors_dark',
   },
+  containerWhite: {
+    flex: 1,
+    backgroundColor: '$colors_white',
+  },
+  containerBottomDark: {
+    backgroundColor: '$colors_dark',
+  },
+  containerBottomDarkCalendar: {backgroundColor: '$colors_schemeDark'},
+  containerBottomWhite: {
+    backgroundColor: '$colors_white',
+  },
+  textCapitalize: {textTransform: 'capitalize'},
+  textUppercase: {textTransform: 'uppercase'},
   flexible: {
     flex: 1,
   },
   redText: {
     color: 'red',
   },
+  flatListDark: {backgroundColor: '$colors_schemeDark'},
   alignItemsStart: {
     alignItems: 'flex-start',
   },

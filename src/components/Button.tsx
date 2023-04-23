@@ -14,6 +14,8 @@ import Text, {TextCustomProps} from './Text';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
+type ButtonTheme = 'light' | 'dark';
+
 export interface ButtonProps {
   text?: string;
   iconName?: string;
@@ -21,6 +23,7 @@ export interface ButtonProps {
   isLoading?: boolean;
   disabled?: boolean;
   buttonHeight?: number;
+  theme?: ButtonTheme;
   textProps?: TextCustomProps;
   colorIndicator?: string;
   buttonColor?: string;
@@ -34,11 +37,13 @@ const defaultProps: ButtonProps = {
   buttonColor: ColorPalette.secondary,
   colorIndicator: ColorPalette.white,
   colorText: 'black',
+  theme: 'light',
   onPress: () => {},
 };
 
 const Button: React.FC<ButtonProps> = ({
   text,
+  theme,
   iconName,
   iconProps,
   isLoading,
@@ -57,9 +62,10 @@ const Button: React.FC<ButtonProps> = ({
   const styleOpacity = useMemo(() => {
     return {
       opacity: disabled ? 0.5 : 1,
-      backgroundColor: 'rgba(255,255, 255,0.5)',
+      backgroundColor:
+        theme === 'dark' ? 'rgba(255, 255, 255,0.5)' : "'rgba(0, 0, 0,0.5)'",
     };
-  }, [disabled]);
+  }, [disabled, theme]);
   return (
     <TouchableOpacity
       style={[

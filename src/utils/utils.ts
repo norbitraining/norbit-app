@@ -50,7 +50,7 @@ export const rHeight = (height: number): number => {
 };
 
 export const fontNormalize = (size: number) => {
-  return rHeight(size);
+  return rWidth(size);
 };
 
 export const withDefaults = <P, DP>(

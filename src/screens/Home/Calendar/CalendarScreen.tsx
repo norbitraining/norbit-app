@@ -22,8 +22,8 @@ import {planningActions} from 'store/reducers/planning';
 
 import {ItemAnimation} from './components/AnimationItem';
 import {CalendarSkeletonItem} from './components/CalendarSkeletonItem';
-
 import Calendar from 'components/Calendar';
+import {EmptyPlanning} from './components/EmptyPlanning';
 
 import {format} from 'date-fns';
 import {rHeight} from 'utils';
@@ -135,13 +135,25 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
     [],
   );
 
+  const ListHeaderComponent = useMemo(() => {
+    if (currentPlanning.planningList.length) {
+      return null;
+    }
+    return EmptyPlanning;
+  }, [currentPlanning.planningList.length]);
+
   return (
     <View style={isDark ? GlobalStyles.container : GlobalStyles.containerWhite}>
-      <Animated.View onLayout={handleHeaderLayout} style={headerAnimatedStyle}>
+      <Animated.View
+        onLayout={handleHeaderLayout}
+        style={headerAnimatedStyle}
+        needsOffscreenAlphaCompositing>
         <Calendar date={date} onPressDate={pressDate} language="es" />
       </Animated.View>
       {currentPlanning.isLoading && (
-        <Animated.View style={containerStyleLoading}>
+        <Animated.View
+          style={containerStyleLoading}
+          needsOffscreenAlphaCompositing>
           <CalendarSkeletonItem />
         </Animated.View>
       )}
@@ -149,6 +161,8 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
         <AnimatedSectionList
           exiting={FadeOut.springify()}
           entering={FadeIn.springify()}
+          needsOffscreenAlphaCompositing
+          renderToHardwareTextureAndroid
           ref={suggestionsRef}
           sections={currentPlanning.planningList}
           viewabilityConfig={viewConfigRef.current}
@@ -158,6 +172,7 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
           renderItem={renderItem}
           decelerationRate="fast"
           onScroll={onScrollHandler}
+          ListHeaderComponent={ListHeaderComponent}
           contentContainerStyle={containerStyle}
         />
       )}

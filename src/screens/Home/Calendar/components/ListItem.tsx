@@ -24,7 +24,7 @@ import Animated, {
 import {trigger} from 'react-native-haptic-feedback';
 import {ExerciseItem} from './ExerciseItem';
 import {PlanningCard, PlanningColumn} from 'store/reducers/planning';
-import {getLabelActivityType} from 'utils';
+import {fontNormalize, getLabelActivityType} from 'utils';
 import Separator from 'components/Separator';
 import {format} from 'date-fns';
 
@@ -106,11 +106,14 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
   return (
     <>
       {item.cards.map((card, index) => (
-        <View key={index}>
+        <View
+          key={index}
+          needsOffscreenAlphaCompositing
+          renderToHardwareTextureAndroid>
           <View style={[GlobalStyles.rowSb, padding.ph7, padding.pb7]}>
             <View>
               <Text
-                fontSize={22}
+                fontSize={fontNormalize(18)}
                 weight="Medium"
                 color={isDark ? 'white' : 'black'}>
                 {item.columnName}
@@ -124,7 +127,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                 <View
                   style={[GlobalStyles.row, GlobalStyles.justifyContentEnd]}>
                   <Text
-                    fontSize={18}
+                    fontSize={fontNormalize(14)}
                     weight="Light"
                     color={isDark ? 'white' : 'black'}>
                     {card.selectedActivityType === 'round' && card.value1}
@@ -151,8 +154,16 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <Animated.View style={[animatedStyle]}>
-            <View ref={aref} onLayout={onLayout}>
+          <Animated.View
+            style={animatedStyle}
+            needsOffscreenAlphaCompositing
+            renderToHardwareTextureAndroid>
+            <View
+              ref={aref}
+              onLayout={onLayout}
+              needsOffscreenAlphaCompositing
+              renderToHardwareTextureAndroid
+              style={padding.ph4}>
               {!card.comment && <Separator thickness={5} />}
               {!!card.comment && (
                 <View style={[padding.pb9, margin.mt5]}>
@@ -168,6 +179,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                   </Text>
                 </View>
               )}
+
               {card.exerciseList.map((exercise, indexExercise) => {
                 return (
                   <ExerciseItem

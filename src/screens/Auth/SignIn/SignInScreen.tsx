@@ -51,8 +51,8 @@ const SignInScreen: React.FC<SignInScreenProps> = ({signInAction}) => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
-      email: 'egarciaT@norbitraining.com',
-      password: 'Ernesto1.',
+      email: '', //'egarciaT@norbitraining.com',
+      password: '', //'Ernesto1.',
     },
   });
 

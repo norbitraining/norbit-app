@@ -23,7 +23,7 @@ import Animated, {
 import {trigger} from 'react-native-haptic-feedback';
 import Separator from 'components/Separator';
 import {Svg} from 'assets/svg';
-import {rHeight, rWidth} from 'utils';
+import {fontNormalize, rHeight, rWidth} from 'utils';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 type ExerciseItemProps = {
@@ -107,7 +107,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
             ]}>
             {isWeight && <Svg.WeightSvg style={margin.mr5} />}
             <Text
-              fontSize={13}
+              fontSize={fontNormalize(12)}
               weight="Light"
               color={isDark ? 'white' : 'black'}>
               {text}
@@ -133,12 +133,14 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
             GlobalStyles.center,
             styles.containerMin,
           ],
-        ]}>
+        ]}
+        needsOffscreenAlphaCompositing
+        renderToHardwareTextureAndroid>
         <View style={[GlobalStyles.rowSb, padding.ph15, padding.pv10]}>
           <View style={[GlobalStyles.flex, GlobalStyles.row]}>
             {!videoUrl && (
               <Text
-                fontSize={14}
+                fontSize={fontNormalize(12)}
                 color={isDark ? 'white' : 'black'}
                 weight="Medium">
                 {exerciseName}
@@ -154,7 +156,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                   onPress={toggleVideo}>
                   <View style={GlobalStyles.row}>
                     <Text
-                      fontSize={14}
+                      fontSize={fontNormalize(12)}
                       weight="Medium"
                       color={isDark ? 'white' : 'black'}
                       style={styles.minWidthExerciseName}>
@@ -166,7 +168,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                       <Animated.View style={animatedArrowStyle}>
                         <Icon
                           name={'chevron-down'}
-                          size={16}
+                          size={fontNormalize(12)}
                           color={EStyleSheet.value('$colors_danger')}
                         />
                       </Animated.View>
@@ -207,7 +209,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
           </View>
         </View>
         {!!videoUrl && (
-          <Animated.View style={[animatedStyle]}>
+          <Animated.View style={animatedStyle}>
             {expanded && (
               <Animated.View
                 style={styles.contentVideo}
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
   alignItemsStart: {alignSelf: 'flex-start'},
   contentVideo: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     marginTop: 5,
     marginHorizontal: 15,
     marginBottom: 10,
@@ -247,13 +249,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    backgroundColor: 'white',
     width: '100%',
     shadowColor: '#000',
+    backgroundColor: 'white',
     shadowOffset: {
       width: 0,
       height: 2,
     },
+    elevation: 3,
     shadowOpacity: 0.16,
     shadowRadius: 3.84,
     borderRadius: 10,

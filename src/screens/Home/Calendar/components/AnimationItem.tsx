@@ -36,7 +36,9 @@ const ItemAnimation: React.FC<ItemAnimationProps> = React.memo(
 
     return (
       <Animated.View
-        style={[isDark ? styles.containerDark : styles.container, rStyle]}>
+        style={[isDark ? styles.containerDark : styles.container, rStyle]}
+        needsOffscreenAlphaCompositing
+        renderToHardwareTextureAndroid>
         <ListItem item={item} index={index} />
       </Animated.View>
     );
@@ -52,7 +54,7 @@ const containerStyle = {
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
 
-  elevation: 5,
+  elevation: 4,
   width: '90%',
   backgroundColor: '$colors_white',
   alignSelf: 'center',

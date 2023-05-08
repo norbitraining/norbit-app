@@ -58,7 +58,11 @@ const TextInputComponent: React.FC<InputProps> = ({
     setShowPassword(!showPassword);
   };
   return (
-    <View style={[styles.containerInput]}>
+    <View
+      style={[
+        styles.containerInput,
+        textInputProps.editable === false && styles.disabled,
+      ]}>
       <View style={styles.contentLabel}>
         <Text
           weight="Medium"
@@ -119,11 +123,11 @@ const TextInputComponent: React.FC<InputProps> = ({
   );
 };
 
-export default withDefaults(TextInputComponent, defaultProps);
+export default React.memo(withDefaults(TextInputComponent, defaultProps));
 
 const inputStyle = {
   height: rHeight(40),
-  fontSize: fontNormalize(13),
+  fontSize: fontNormalize(14),
   flex: 1,
   color: '$colors_white',
   ...fontMaker({weight: 'Regular'}),
@@ -131,7 +135,7 @@ const inputStyle = {
 
 const contentInputStyle = {
   height: rHeight(40),
-  fontSize: fontNormalize(13),
+  fontSize: fontNormalize(14),
   width: '100%',
   justifyContent: 'center',
   backgroundColor: '$colors_inputColorDark',
@@ -144,6 +148,9 @@ const styles = StyleSheet.create({
   contentIcon: {paddingRight: 5},
   contentError: {
     marginTop: rHeight(10),
+  },
+  disabled: {
+    opacity: 0.5,
   },
   textError: {
     fontSize: fontNormalize(12),

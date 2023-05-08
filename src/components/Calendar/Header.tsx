@@ -28,6 +28,7 @@ import {margin, padding} from 'theme/spacing';
 import {GlobalStyles} from 'theme/globalStyle';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {trigger} from 'react-native-haptic-feedback';
+import {fontNormalize} from 'utils';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 
@@ -61,13 +62,13 @@ export const Header: FC<CalendarHeaderProps> = memo(
     const baseOptions = {
       vertical: false,
       width: PAGE_WIDTH * 0.41,
-      height: 50,
+      height: fontNormalize(38),
     } as const;
 
     const carouselStyle = useMemo(
       () => ({
         width: PAGE_WIDTH,
-        height: 50,
+        height: fontNormalize(38),
       }),
       [],
     );
@@ -138,7 +139,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
             onPress={onPress}
             activeOpacity={0.9}>
             <Text
-              fontSize={monthSelected ? 28 : 26}
+              fontSize={fontNormalize(monthSelected ? 24 : 22)}
               weight={monthSelected ? 'SemiBold' : 'Light'}
               color={monthSelected ? 'white' : '#747474'}
               style={GlobalStyles.textCapitalize}>
@@ -151,7 +152,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
     );
 
     return (
-      <View style={padding.pb9}>
+      <View style={padding.pb5}>
         <View
           style={[GlobalStyles.rowSb, padding.pb9, padding.ph20, margin.mt5]}>
           <TouchableOpacity
@@ -159,7 +160,10 @@ export const Header: FC<CalendarHeaderProps> = memo(
             activeOpacity={0.8}
             onPress={onPressDatePicker}>
             <Svg.MoreSvg width={24} height={24} />
-            <Text color="white" style={margin.ml12} fontSize={16}>
+            <Text
+              color="white"
+              style={margin.ml12}
+              fontSize={fontNormalize(14)}>
               {getYear}
             </Text>
           </TouchableOpacity>

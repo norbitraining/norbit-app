@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleProp, ViewStyle} from 'react-native';
-import {rHeight, withDefaults} from 'utils';
+import {fontNormalize, rHeight, withDefaults} from 'utils';
 import {StyleSheet} from 'utils/stylesheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {navigationRef} from 'router/Router';
@@ -45,7 +45,11 @@ const Header: React.FC<HeaderProps> = ({
       )}
       {showText && (
         <View style={styles.contentTitle}>
-          <Text fontSize={30} color={textColor} align="left" weight="SemiBold">
+          <Text
+            fontSize={fontNormalize(26)}
+            color={textColor}
+            align="left"
+            weight="SemiBold">
             {text}
           </Text>
         </View>

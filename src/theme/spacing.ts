@@ -18,6 +18,7 @@ export const margin = {
 export const padding = {
   pl12: {paddingLeft: rWidth(12)},
   ph7: {paddingHorizontal: rWidth(7)},
+  ph4: {paddingHorizontal: rWidth(4)},
   ph10: {paddingHorizontal: rWidth(10)},
   pv10: {paddingVertical: rWidth(10)},
   pv15: {paddingVertical: rWidth(15)},

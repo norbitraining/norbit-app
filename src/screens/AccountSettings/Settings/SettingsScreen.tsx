@@ -6,13 +6,14 @@ import {
   SectionListRenderItem,
   SectionListData,
   useColorScheme,
+  Linking,
 } from 'react-native';
 
 import {GlobalStyles} from 'theme/globalStyle';
 
 import {navigationRef, Screen} from 'router/Router';
 
-import {rHeight, rWidth} from 'utils';
+import {fontNormalize, rHeight, rWidth} from 'utils';
 import {StyleSheet} from 'utils/stylesheet';
 
 import Text from 'components/Text';
@@ -23,11 +24,13 @@ import Header from 'components/Header';
 import Separator from 'components/Separator';
 import {ButtonText, HeaderText} from 'utils/text';
 import ModalSignOut from 'components/ModalSignOut';
+import DeviceInfo from 'react-native-device-info';
 
 const keyExtractor = (item: any, index: number) => `${item.text}-${index}`;
 interface Item {
   text: string;
-  screenName: any;
+  screenName?: any;
+  url?: string;
 }
 
 interface Section {
@@ -44,6 +47,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
   const [showModalSignOut, setShowModalSignOut] = useState<boolean>(false);
+
+  const version = useMemo(() => DeviceInfo.getReadableVersion(), []);
 
   const DataConfig: Section[] = [
     {
@@ -68,15 +73,14 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
       data: [
         {
           text: 'Politica y privacidad',
-          screenName: '.',
+          url: 'https://norbitraining.com/privacy-policy',
         },
         {
-          text: 'Politica de uso ',
-          screenName: '.',
+          text: 'Términos y condiciones',
+          url: 'https://norbitraining.com/terms',
         },
         {
-          text: 'Version 2.2',
-          screenName: null,
+          text: `Version ${version}`,
         },
       ],
     },
@@ -100,7 +104,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
         />
         <Text
           color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={16}
+          fontSize={fontNormalize(16)}
           align="left">
           {title}
         </Text>
@@ -109,6 +113,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
   };
   const SectionRenderItem: SectionListRenderItem<Item> = ({item}) => {
     const handleItem = () => {
+      if (item.url) {
+        Linking.openURL(item.url);
+      }
       if (!item.screenName) {
         return;
       }
@@ -121,12 +128,12 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
         onPress={handleItem}>
         <Text
           color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={16}
+          fontSize={fontNormalize(14)}
           align="left"
           weight="Light">
           {item.text}
         </Text>
-        {item.screenName && (
+        {(item.screenName || item.url) && (
           <Icon
             name="chevron-right"
             color={EStyleSheet.value(
@@ -177,8 +184,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
             {ButtonText.logOut}
           </Text>
         </TouchableOpacity>
+
+        <Separator thickness="8%" />
       </View>
-      <Separator thickness="8%" />
       <ModalSignOut
         visible={showModalSignOut}
         onCloseModal={handleCloseModal}

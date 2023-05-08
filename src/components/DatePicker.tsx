@@ -94,7 +94,8 @@ const Picker: React.FC<PickerProps> = ({
                   theme === 'light'
                     ? EStyleSheet.value('$colors_dark')
                     : EStyleSheet.value('$colors_white')
-                }>
+                }
+                fontSize={fontNormalize(14)}>
                 {value}
               </Text>
             ) : (

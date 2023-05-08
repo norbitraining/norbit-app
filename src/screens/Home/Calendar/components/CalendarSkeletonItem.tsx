@@ -17,7 +17,9 @@ const CalendarSkeletonItem: React.FC<CalendarSkeletonItemProps> = React.memo(
 
     const SkeletonCard = useCallback(() => {
       return (
-        <View style={isDark ? styles.contentCardDark : styles.contentCard}>
+        <View
+          style={isDark ? styles.contentCardDark : styles.contentCard}
+          needsOffscreenAlphaCompositing>
           <View style={[GlobalStyles.rowSb, padding.ph15]}>
             <Skeleton
               width={120}
@@ -70,6 +72,8 @@ const CalendarSkeletonItem: React.FC<CalendarSkeletonItemProps> = React.memo(
     return (
       <Animated.View
         style={[GlobalStyles.center, isDark && GlobalStyles.flatListDark]}
+        needsOffscreenAlphaCompositing
+        renderToHardwareTextureAndroid
         entering={FadeIn.duration(400)}
         exiting={FadeOut.duration(400)}>
         <SkeletonCard />
@@ -87,8 +91,7 @@ const contentCard = {
   },
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
-
-  elevation: 5,
+  elevation: 4,
   width: '90%',
   paddingVertical: 25,
   backgroundColor: 'white',

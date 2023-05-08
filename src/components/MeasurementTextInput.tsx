@@ -122,6 +122,7 @@ const MeasurementTextInput: React.FC<MeasurementTextInputProps> = ({
           <View style={GlobalStyles.row}>
             <Text
               style={margin.mr5}
+              fontSize={fontNormalize(14)}
               color={
                 theme === 'light'
                   ? EStyleSheet.value('$colors_dark')
@@ -163,7 +164,7 @@ export default withDefaults(MeasurementTextInput, defaultProps);
 
 const inputStyle = {
   height: rHeight(40),
-  fontSize: fontNormalize(13),
+  fontSize: fontNormalize(14),
   flex: 1,
   color: '$colors_white',
   ...fontMaker({weight: 'Regular'}),
@@ -171,7 +172,7 @@ const inputStyle = {
 
 const contentInputStyle = {
   height: rHeight(40),
-  fontSize: fontNormalize(13),
+  fontSize: fontNormalize(14),
   width: '100%',
   justifyContent: 'center',
   backgroundColor: '$colors_inputColorDark',

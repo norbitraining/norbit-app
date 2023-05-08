@@ -1,7 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
 import * as yup from 'yup';
 
-import {KeyboardAvoidingView, useColorScheme, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  useColorScheme,
+  View,
+} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 
@@ -160,98 +165,101 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
       <Separator thickness="3%" />
 
       <View style={[GlobalStyles.flex, padding.ph20]}>
-        <KeyboardAvoidingView
-          style={GlobalStyles.flex}
-          behavior={BEHAVIOR}
-          keyboardVerticalOffset={50}>
-          <View>
-            <Separator thickness={20} />
+        <ScrollView contentContainerStyle={padding.pb15}>
+          <KeyboardAvoidingView
+            style={GlobalStyles.flex}
+            behavior={BEHAVIOR}
+            keyboardVerticalOffset={50}>
             <View>
-              <Controller
-                control={control}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    label={Input.currentPassword}
-                    theme={scheme || 'light'}
-                    textInputProps={{
-                      onBlur: onBlur,
-                      onChangeText: onChange,
-                      value,
-                      placeholder: '*********',
-                      secureTextEntry: true,
-                    }}
-                    isPassword
-                    error={errors.currentPassword}
-                  />
-                )}
-                name="currentPassword"
-                rules={{required: true}}
-              />
+              <Separator thickness={20} />
+              <View>
+                <Controller
+                  control={control}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      label={Input.currentPassword}
+                      theme={scheme || 'light'}
+                      textInputProps={{
+                        onBlur: onBlur,
+                        onChangeText: onChange,
+                        value,
+                        placeholder: '*********',
+                        secureTextEntry: true,
+                      }}
+                      isPassword
+                      error={errors.currentPassword}
+                    />
+                  )}
+                  name="currentPassword"
+                  rules={{required: true}}
+                />
+                <Separator thickness={15} />
+                <Controller
+                  control={control}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      label={Input.newPassword}
+                      theme={scheme || 'light'}
+                      textInputProps={{
+                        onBlur: onBlur,
+                        onChangeText: onChange,
+                        value,
+                        placeholder: '*********',
+                        secureTextEntry: true,
+                      }}
+                      isPassword
+                    />
+                  )}
+                  name="newPassword"
+                  rules={{required: true}}
+                />
+                <Separator thickness={15} />
+                <Controller
+                  control={control}
+                  render={({field: {onChange, onBlur, value}}) => (
+                    <TextInput
+                      label={Input.confirmNewPassword}
+                      theme={scheme || 'light'}
+                      textInputProps={{
+                        onBlur: onBlur,
+                        onChangeText: onChange,
+                        value,
+                        placeholder: '*********',
+                        secureTextEntry: true,
+                      }}
+                      isPassword
+                      error={errors.confirmNewPassword}
+                    />
+                  )}
+                  name="confirmNewPassword"
+                  rules={{required: true}}
+                />
+              </View>
               <Separator thickness={15} />
-              <Controller
-                control={control}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    label={Input.newPassword}
-                    theme={scheme || 'light'}
-                    textInputProps={{
-                      onBlur: onBlur,
-                      onChangeText: onChange,
-                      value,
-                      placeholder: '*********',
-                      secureTextEntry: true,
-                    }}
-                    isPassword
-                  />
-                )}
-                name="newPassword"
-                rules={{required: true}}
-              />
+              <View style={styles.contentRules}>
+                {textRuleList.map(TextRule)}
+              </View>
               <Separator thickness={15} />
-              <Controller
-                control={control}
-                render={({field: {onChange, onBlur, value}}) => (
-                  <TextInput
-                    label={Input.confirmNewPassword}
-                    theme={scheme || 'light'}
-                    textInputProps={{
-                      onBlur: onBlur,
-                      onChangeText: onChange,
-                      value,
-                      placeholder: '*********',
-                      secureTextEntry: true,
-                    }}
-                    isPassword
-                    error={errors.confirmNewPassword}
-                  />
-                )}
-                name="confirmNewPassword"
-                rules={{required: true}}
-              />
             </View>
-            <Separator thickness={15} />
-            <View style={styles.contentRules}>
-              {textRuleList.map(TextRule)}
-            </View>
-            <Separator thickness={15} />
+          </KeyboardAvoidingView>
+
+          <View style={styles.contentButton}>
+            <Button
+              text={ButtonText.changePassword}
+              onPress={handleSubmit(onSubmit)}
+              textProps={{
+                fontSize: rHeight(14),
+                weight: 'Medium',
+                color: 'white',
+                style: {textTransform: 'uppercase'},
+              }}
+              theme={scheme || 'light'}
+              disabled={!isValid}
+              isLoading={currentUser.isLoading}
+              buttonColor={EStyleSheet.value('$colors_dangerTab')}
+            />
           </View>
-        </KeyboardAvoidingView>
-        <View style={styles.contentButton}>
-          <Button
-            text={ButtonText.changePassword}
-            onPress={handleSubmit(onSubmit)}
-            textProps={{
-              fontSize: rHeight(14),
-              weight: 'Medium',
-              color: 'white',
-              style: {textTransform: 'uppercase'},
-            }}
-            theme={scheme || 'light'}
-            disabled={!isValid}
-            isLoading={currentUser.isLoading}
-            buttonColor={EStyleSheet.value('$colors_dangerTab')}
-          />
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -284,7 +292,7 @@ const styles = StyleSheet.create({
   },
   iconRule: {marginRight: 7},
   itemRule: {marginVertical: 3},
-  contentButton: {flex: 0.15, justifyContent: 'center'},
+  contentButton: {flex: 0.15, justifyContent: 'center', marginTop: 15},
   contentRules: {
     borderRadius: 5,
     borderWidth: 1,

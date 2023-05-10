@@ -76,9 +76,7 @@ export const WeekItem: FC<WeekItemProps> = memo(
             color={selectedDate ? '#E1251B' : '#7B7B7B'}
             fontSize={selectedDate ? 16 : 13}
             weight={selectedDate ? 'Regular' : 'Light'}
-            style={{
-              ...styles.eachDay,
-            }}>
+            style={styles.eachDay}>
             {day}
           </Text>
         </TouchableOpacity>

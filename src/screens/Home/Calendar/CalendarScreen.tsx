@@ -100,16 +100,24 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
     [headerDiff, headerHeight, screenHeight],
   );
 
+  const getPlanning = useCallback(() => {
+    getPlanningAction({date: format(date, 'yyyy-MM-dd')});
+  }, [date, getPlanningAction]);
+
   const pressDate = useCallback(
     (d: Date) => {
       setDate(d);
+      if (d !== date) {
+        return;
+      }
+      getPlanning();
     },
-    [setDate],
+    [date, getPlanning],
   );
 
   useEffect(() => {
-    getPlanningAction({date: format(date, 'yyyy-MM-dd')});
-  }, [date, getPlanningAction]);
+    getPlanning();
+  }, [getPlanning]);
 
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {

@@ -111,7 +111,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
           needsOffscreenAlphaCompositing
           renderToHardwareTextureAndroid>
           <View style={[GlobalStyles.rowSb, padding.ph7, padding.pb7]}>
-            <View>
+            <View style={GlobalStyles.flex}>
               <Text
                 fontSize={fontNormalize(18)}
                 weight="Medium"
@@ -119,7 +119,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                 {item.columnName}
               </Text>
             </View>
-            <View style={GlobalStyles.center}>
+            <View style={[GlobalStyles.center]}>
               <TouchableOpacity
                 hitSlop={{top: 20, right: 10, left: 15, bottom: 5}}
                 activeOpacity={0.8}
@@ -146,11 +146,12 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                     />
                   </Animated.View>
                 </View>
-
-                {card.selectedActivityType !== 'none' &&
-                  card.selectedActivityType !== 'round' && (
-                    <DetailByTime card={card} isDark={isDark} />
-                  )}
+                <View>
+                  {card.selectedActivityType !== 'none' &&
+                    card.selectedActivityType !== 'round' && (
+                      <DetailByTime card={card} isDark={isDark} />
+                    )}
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -232,12 +233,7 @@ const DetailByTime = ({
       )}
       {card.selectedActivityType === 'emom' && (
         <View style={GlobalStyles.row}>
-          <View
-            style={[
-              GlobalStyles.row,
-              GlobalStyles.justifyContentEnd,
-              margin.mt5,
-            ]}>
+          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
             <Text
               fontSize={13}
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
@@ -255,15 +251,10 @@ const DetailByTime = ({
               fontSize={13}
               weight="Light"
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              /
+              /{' '}
             </Text>
           </View>
-          <View
-            style={[
-              GlobalStyles.row,
-              GlobalStyles.justifyContentEnd,
-              margin.mt5,
-            ]}>
+          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
             <Text
               fontSize={13}
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
@@ -279,13 +270,8 @@ const DetailByTime = ({
         </View>
       )}
       {card.selectedActivityType === 'tabata' && (
-        <View style={GlobalStyles.row}>
-          <View
-            style={[
-              GlobalStyles.row,
-              GlobalStyles.justifyContentEnd,
-              margin.mt5,
-            ]}>
+        <View style={[GlobalStyles.row]}>
+          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
             <Text
               fontSize={13}
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
@@ -308,12 +294,7 @@ const DetailByTime = ({
             </Text>
           </View>
           <View style={GlobalStyles.row}>
-            <View
-              style={[
-                GlobalStyles.row,
-                GlobalStyles.justifyContentEnd,
-                margin.mt5,
-              ]}>
+            <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
               <Text
                 fontSize={13}
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
@@ -334,12 +315,7 @@ const DetailByTime = ({
                 /
               </Text>
             </View>
-            <View
-              style={[
-                GlobalStyles.row,
-                GlobalStyles.justifyContentEnd,
-                margin.mt5,
-              ]}>
+            <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
               <Text
                 fontSize={13}
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>

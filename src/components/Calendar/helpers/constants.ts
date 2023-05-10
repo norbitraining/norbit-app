@@ -1,4 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
+import {GlobalStyles} from 'theme/globalStyle';
 
 export const screenWidth = Dimensions.get('screen').width;
 export const itemWidth = screenWidth / 7;
@@ -17,6 +18,7 @@ export const colors = {
 
 export const styles = StyleSheet.create({
   eachDay: {
+    ...GlobalStyles.center,
     paddingVertical: 9,
     paddingHorizontal: 4,
     borderRadius: 20,

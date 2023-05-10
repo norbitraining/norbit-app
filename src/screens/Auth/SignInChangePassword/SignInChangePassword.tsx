@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import * as yup from 'yup';
 
-import {KeyboardAvoidingView, View} from 'react-native';
+import {KeyboardAvoidingView, View, Keyboard} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 
@@ -126,8 +126,15 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
     [getValues, isSubmitted],
   );
 
+  const onEndCapture = () => {
+    if (!Keyboard.isVisible()) {
+      return;
+    }
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={container}>
+    <View style={container} onTouchEndCapture={onEndCapture}>
       <KeyboardAvoidingView
         style={GlobalStyles.flexible}
         behavior={BEHAVIOR}

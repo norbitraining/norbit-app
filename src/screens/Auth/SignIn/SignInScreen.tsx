@@ -102,6 +102,7 @@ const SignInScreen: React.FC<SignInScreenProps> = ({signInAction}) => {
                     onChangeText: onChange,
                     value,
                     placeholder: 'ex@outlook.com',
+                    keyboardType: 'email-address',
                   }}
                   error={errors.email}
                 />

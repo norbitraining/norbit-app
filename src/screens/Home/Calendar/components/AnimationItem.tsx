@@ -37,8 +37,7 @@ const ItemAnimation: React.FC<ItemAnimationProps> = React.memo(
     return (
       <Animated.View
         style={[isDark ? styles.containerDark : styles.container, rStyle]}
-        needsOffscreenAlphaCompositing
-        renderToHardwareTextureAndroid>
+        needsOffscreenAlphaCompositing>
         <ListItem item={item} index={index} />
       </Animated.View>
     );

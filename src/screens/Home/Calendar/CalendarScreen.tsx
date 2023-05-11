@@ -169,8 +169,6 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
         <AnimatedSectionList
           exiting={FadeOut.springify()}
           entering={FadeIn.springify()}
-          needsOffscreenAlphaCompositing
-          renderToHardwareTextureAndroid
           ref={suggestionsRef}
           sections={currentPlanning.planningList}
           viewabilityConfig={viewConfigRef.current}

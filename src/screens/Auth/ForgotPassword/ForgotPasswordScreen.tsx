@@ -51,7 +51,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues: {
-      email: 'egarcia@norbitraining.com',
+      email: '',
     },
   });
 

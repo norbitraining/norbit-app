@@ -106,10 +106,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
   return (
     <>
       {item.cards.map((card, index) => (
-        <View
-          key={index}
-          needsOffscreenAlphaCompositing
-          renderToHardwareTextureAndroid>
+        <View key={index} needsOffscreenAlphaCompositing>
           <View style={[GlobalStyles.rowSb, padding.ph7, padding.pb7]}>
             <View style={GlobalStyles.flex}>
               <Text
@@ -155,15 +152,11 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <Animated.View
-            style={animatedStyle}
-            needsOffscreenAlphaCompositing
-            renderToHardwareTextureAndroid>
+          <Animated.View style={animatedStyle} needsOffscreenAlphaCompositing>
             <View
               ref={aref}
               onLayout={onLayout}
               needsOffscreenAlphaCompositing
-              renderToHardwareTextureAndroid
               style={padding.ph4}>
               {!card.comment && <Separator thickness={5} />}
               {!!card.comment && (

@@ -23,7 +23,7 @@ import Animated, {
 import {trigger} from 'react-native-haptic-feedback';
 import Separator from 'components/Separator';
 import {Svg} from 'assets/svg';
-import {fontNormalize, rHeight, rWidth} from 'utils';
+import {fontNormalize, isAndroid, rHeight, rWidth} from 'utils';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 type ExerciseItemProps = {
@@ -46,7 +46,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
     const height = useSharedValue<number>(0);
     const iconRotate = useSharedValue<number>(0);
 
-    const timeOutVideoRef = useRef<NodeJS.Timeout>();
+    const timeOutVideoRef = useRef<number | any>();
 
     const toggleVideo = useCallback(() => {
       trigger('impactLight', {
@@ -64,7 +64,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
           timeOutVideoRef.current = setTimeout(() => {
             setPlaying(true);
           }, 500);
-          height.value = withTiming(rHeight(155));
+          height.value = withTiming(rHeight(isAndroid ? 145 : 139));
           iconRotate.value = withTiming(1);
         }
         setExpanded(!expanded);
@@ -134,8 +134,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
             styles.containerMin,
           ],
         ]}
-        needsOffscreenAlphaCompositing
-        renderToHardwareTextureAndroid>
+        needsOffscreenAlphaCompositing>
         <View style={[GlobalStyles.rowSb, padding.ph15, padding.pv10]}>
           <View style={[GlobalStyles.flex, GlobalStyles.row]}>
             {!videoUrl && (
@@ -218,11 +217,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                 <YoutubePlayer
                   height={'100%' as any}
                   width={'100%' as any}
-                  webViewProps={{
-                    startInLoadingState: true,
-                    renderToHardwareTextureAndroid: true,
-                  }}
+                  forceAndroidAutoplay={isAndroid}
                   webViewStyle={styles.webView}
+                  webViewProps={{startInLoadingState: true}}
                   play={playing}
                   contentScale={0.75}
                   videoId={videoUrl}
@@ -256,7 +253,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    elevation: 3,
+    elevation: 2,
     shadowOpacity: 0.16,
     shadowRadius: 3.84,
     borderRadius: 10,
@@ -274,8 +271,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   webView: {
-    flexGrow: 1,
-    borderRadius: 0,
     backgroundColor: 'white',
     position: 'absolute',
     left: 0,

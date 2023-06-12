@@ -1,4 +1,4 @@
-import {Screen} from 'router/Router';
+import {Screen} from 'utils/constants/screens';
 
 export type AppRootParamList = {
   [Screen.SIGN_IN]: undefined;

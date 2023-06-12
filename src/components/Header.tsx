@@ -3,7 +3,7 @@ import {View, TouchableOpacity, StyleProp, ViewStyle} from 'react-native';
 import {fontNormalize, rHeight, withDefaults} from 'utils';
 import {StyleSheet} from 'utils/stylesheet';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {navigationRef} from 'router/Router';
+import {navigationRef} from 'utils/constants/screens';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Text from './Text';
 

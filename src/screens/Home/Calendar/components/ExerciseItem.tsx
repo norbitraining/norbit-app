@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   row3: {justifyContent: 'flex-end'},
   flexEnd: {alignItems: 'flex-end'},
-  minWidthExerciseName: {minWidth: rWidth(55), maxWidth: '80%', marginRight: 5},
+  minWidthExerciseName: {minWidth: rWidth(50), maxWidth: '80%', marginRight: 5},
 });
 
 export {ExerciseItem};

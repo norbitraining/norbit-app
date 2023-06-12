@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, StyleSheet, StatusBar, Keyboard} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import FastImage, {Source} from 'react-native-fast-image';
@@ -15,14 +15,8 @@ const BackgroundContainer: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   source,
   children,
 }) => {
-  const onEndCapture = () => {
-    if (!Keyboard.isVisible()) {
-      return;
-    }
-    Keyboard.dismiss();
-  };
   return (
-    <View style={GlobalStyles.container} onTouchEndCapture={onEndCapture}>
+    <View style={GlobalStyles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.absolute}>
         <FastImage source={source} style={styles.absoluteImage} />

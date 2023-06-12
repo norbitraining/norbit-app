@@ -72,7 +72,7 @@ export const normalizeCatchActions = (codeError?: keyof typeof LabelError) => {
 
 export const getLabelActivityType = (
   activityType: PlanningActivityType,
-  numberOfRounds?: number,
+  rounds?: string,
 ) => {
   if (activityType === 'none') {
     return '';
@@ -86,8 +86,8 @@ export const getLabelActivityType = (
   if (activityType === 'amrap') {
     return 'Amrap';
   }
-  if (activityType === 'round' && numberOfRounds) {
-    return numberOfRounds > 1 ? ' Rondas' : ' Ronda';
+  if (activityType === 'round' && rounds) {
+    return rounds.length > 1 || Number(rounds) > 1 ? ' Rondas' : ' Ronda';
   }
   if (activityType === 'tabata') {
     return 'Tabata';

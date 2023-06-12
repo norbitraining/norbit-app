@@ -1,4 +1,4 @@
-import {Screen} from 'router/Router';
+import {Screen} from 'utils/constants/screens';
 import {ButtonText, Label} from 'utils/text';
 
 interface IAction {

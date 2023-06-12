@@ -6,7 +6,7 @@ import {GlobalStyles} from 'theme/globalStyle';
 import {rHeight} from 'utils';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {StyleSheet} from 'utils/stylesheet';
-import {Screen} from 'router/Router';
+import {Screen} from 'utils/constants/screens';
 import Text from './Text';
 import Icon from 'react-native-vector-icons/Feather';
 import Separator from './Separator';

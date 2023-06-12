@@ -11,7 +11,7 @@ import {rWidth} from 'utils';
 import Text from 'components/Text';
 import Button from 'components/Button';
 
-import {navigationRef, Screen} from 'router/Router';
+import {Screen, navigationRef} from 'utils/constants/screens';
 import actions from './actions';
 import {Svg} from 'assets/svg';
 import Separator from 'components/Separator';

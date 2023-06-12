@@ -5,7 +5,7 @@ import SettingsScreen from 'screens/AccountSettings/Settings';
 import ProfileScreen from 'screens/AccountSettings/Profile';
 import ChangePasswordSettingsScreen from 'screens/AccountSettings/ChangePassword';
 
-import {Screen} from 'router/Router';
+import {Screen} from 'utils/constants/screens';
 
 const SettingsRouter = createStackNavigator();
 

@@ -10,7 +10,6 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {
-  createNavigationContainerRef,
   DarkTheme,
   getFocusedRouteNameFromRoute,
   NavigationContainer,
@@ -28,27 +27,17 @@ import ConfirmationSuccessScreen from 'screens/Auth/ConfirmationSuccess';
 import CalendarStack from './stack/CalendarStack';
 import SettingsStack from './stack/SettingsStack';
 import TabBar from 'components/TabBar';
+
 import {GlobalStyles} from 'theme/globalStyle';
 import {useSelector} from 'store/reducers/rootReducers';
-
-export const navigationRef = createNavigationContainerRef();
+import {
+  navigationRef,
+  Screen,
+  validateShownTabBar,
+} from 'utils/constants/screens';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-export enum Screen {
-  SPLASH = 'SplashScreen',
-  SIGN_IN = 'SignInScreen',
-  CONFIRMATION_SUCCESS = 'ConfirmationSuccess',
-  PROFILE = 'Profile',
-  SIGN_IN_CHANGE_PASSWORD = 'SignInChangePasswordScreen',
-  FORGOT_PASSWORD = 'ForgotPassword',
-  CALENDAR = 'Calendar',
-  CALENDAR_STACK = 'CalendarStack',
-  SETTINGS = 'Settings',
-  SETTINGS_STACK = 'SettingsStack',
-  CHANGE_PASSWORD_SETTINGS = 'ChangePasswordSettings',
-}
 
 interface MainStyleScheme {
   container: any;
@@ -61,13 +50,6 @@ export type RouterParamList = {
 };
 
 export interface RouterProps {}
-
-const validateShownTabBar = (_route: string | undefined) => {
-  if (_route === Screen.PROFILE || _route === Screen.CHANGE_PASSWORD_SETTINGS) {
-    return false;
-  }
-  return true;
-};
 
 function BottomTabNavigator() {
   const scheme = useColorScheme();

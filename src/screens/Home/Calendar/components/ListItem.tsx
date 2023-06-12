@@ -27,6 +27,7 @@ import {PlanningCard, PlanningColumn} from 'store/reducers/planning';
 import {fontNormalize, getLabelActivityType} from 'utils';
 import Separator from 'components/Separator';
 import {format} from 'date-fns';
+import moment from 'moment';
 
 type ListItemProps = {
   item: PlanningColumn;
@@ -107,7 +108,13 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
     <>
       {item.cards.map((card, index) => (
         <View key={index} needsOffscreenAlphaCompositing>
-          <View style={[GlobalStyles.rowSb, padding.ph7, padding.pb7]}>
+          <View
+            style={[
+              GlobalStyles.rowSb,
+              padding.ph7,
+              padding.pb7,
+              GlobalStyles.alignItemsStart,
+            ]}>
             <View style={GlobalStyles.flex}>
               <Text
                 fontSize={fontNormalize(18)}
@@ -116,7 +123,12 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                 {item.columnName}
               </Text>
             </View>
-            <View style={[GlobalStyles.center]}>
+            <View
+              style={[
+                GlobalStyles.center,
+                GlobalStyles.alignItemsStart,
+                margin.mt5,
+              ]}>
               <TouchableOpacity
                 hitSlop={{top: 20, right: 10, left: 15, bottom: 5}}
                 activeOpacity={0.8}
@@ -130,7 +142,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                     {card.selectedActivityType === 'round' && card.value1}
                     {getLabelActivityType(
                       card.selectedActivityType,
-                      Number(card.value1 || 0),
+                      card.value1,
                     )}
                   </Text>
 
@@ -236,7 +248,7 @@ const DetailByTime = ({
               fontSize={13}
               weight="Light"
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              {format(new Date(card.value1), 'mm:ss')} min
+              {format(moment(card.value1).toDate(), 'mm:ss')} min
             </Text>
           </View>
           <View style={margin.mh5}>

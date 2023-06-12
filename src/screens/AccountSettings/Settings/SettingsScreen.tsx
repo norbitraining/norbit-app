@@ -11,7 +11,7 @@ import {
 
 import {GlobalStyles} from 'theme/globalStyle';
 
-import {navigationRef, Screen} from 'router/Router';
+import {Screen, navigationRef} from 'utils/constants/screens';
 
 import {fontNormalize, rHeight, rWidth} from 'utils';
 import {StyleSheet} from 'utils/stylesheet';

@@ -1,7 +1,6 @@
 import React from 'react';
 import './i18n';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import persistStore from 'redux-persist/es/persistStore';
@@ -16,6 +15,7 @@ const persistor = persistStore(store);
 
 const App = () => {
   EStyleSheet.build(ESTheme);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

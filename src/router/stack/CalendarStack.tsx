@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import CalendarScreen from 'screens/Home/Calendar';
 
-import {Screen} from 'router/Router';
+import {Screen} from 'utils/constants/screens';
 
 const CalendarRouter = createStackNavigator();
 

@@ -21,7 +21,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Button from 'components/Button';
 import {userActions} from 'store/reducers/user';
 import {useSelector} from 'store/reducers/rootReducers';
-import {navigationRef, Screen} from 'router/Router';
+import {Screen, navigationRef} from 'utils/constants/screens';
 
 const BEHAVIOR = isAndroid ? undefined : 'padding';
 

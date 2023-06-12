@@ -2,10 +2,11 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {IUserRequest, userActions} from 'store/reducers/user';
 import {all, put, takeLatest} from 'redux-saga/effects';
 import AuthServices from 'services/auth-services';
-import {navigationRef, Screen} from 'router/Router';
+
 import {onError, safe} from 'utils/functions-saga';
 import Toast from 'react-native-toast-message';
 import {LabelSuccess} from 'utils/text';
+import {Screen, navigationRef} from 'utils/constants/screens';
 
 function* signInSaga(
   action: PayloadAction<{

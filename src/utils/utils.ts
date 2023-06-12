@@ -50,7 +50,8 @@ export const rHeight = (height: number): number => {
 };
 
 export const fontNormalize = (size: number) => {
-  return rWidth(size);
+  const fontScale = PixelRatio.getFontScale();
+  return size * fontScale;
 };
 
 export const withDefaults = <P, DP>(

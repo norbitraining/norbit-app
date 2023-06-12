@@ -45,19 +45,18 @@ const ItemAnimation: React.FC<ItemAnimationProps> = React.memo(
 );
 
 const containerStyle = {
-  shadowColor: '#000',
+  shadowColor: '$colors_black',
   shadowOffset: {
     width: 0,
     height: 2,
   },
-  shadowOpacity: 0.25,
+  shadowOpacity: 0.15,
   shadowRadius: 3.84,
-
   elevation: 4,
-  width: '90%',
+  width: '95%',
   backgroundColor: '$colors_white',
   alignSelf: 'center',
-  borderRadius: 10,
+  borderRadius: 6,
   marginTop: 20,
   paddingVertical: 20,
   paddingHorizontal: 15,

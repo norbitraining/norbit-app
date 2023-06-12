@@ -64,7 +64,7 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
     heightCollapsed: number;
   }>(
     () => ({
-      heightCollapsed: HEADER_HEIGHT + 5,
+      heightCollapsed: HEADER_HEIGHT,
       heightExpanded: headerHeight,
     }),
     [headerHeight],

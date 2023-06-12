@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   useColorScheme,
   unstable_batchedUpdates,
@@ -23,7 +22,7 @@ import Animated, {
 import {trigger} from 'react-native-haptic-feedback';
 import Separator from 'components/Separator';
 import {Svg} from 'assets/svg';
-import {fontNormalize, isAndroid, rHeight, rWidth} from 'utils';
+import {StyleSheet, fontNormalize, isAndroid, rHeight, rWidth} from 'utils';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 type ExerciseItemProps = {
@@ -64,7 +63,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
           timeOutVideoRef.current = setTimeout(() => {
             setPlaying(true);
           }, 500);
-          height.value = withTiming(rHeight(isAndroid ? 145 : 139));
+          height.value = withTiming(rHeight(isAndroid ? 145 : 150));
           iconRotate.value = withTiming(1);
         }
         setExpanded(!expanded);
@@ -107,7 +106,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
             ]}>
             {isWeight && <Svg.WeightSvg style={margin.mr5} />}
             <Text
-              fontSize={fontNormalize(12)}
+              fontSize={fontNormalize(14)}
               weight="Light"
               color={isDark ? 'white' : 'black'}>
               {text}
@@ -139,7 +138,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
           <View style={[GlobalStyles.flex, GlobalStyles.row]}>
             {!videoUrl && (
               <Text
-                fontSize={fontNormalize(12)}
+                fontSize={fontNormalize(14)}
                 color={isDark ? 'white' : 'black'}
                 weight="Medium">
                 {exerciseName}
@@ -154,24 +153,23 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                   activeOpacity={0.9}
                   onPress={toggleVideo}>
                   <View style={GlobalStyles.row}>
-                    <Text
-                      fontSize={fontNormalize(12)}
-                      weight="Medium"
-                      color={isDark ? 'white' : 'black'}
-                      style={styles.minWidthExerciseName}>
-                      {exerciseName}
-                    </Text>
-
                     <View style={GlobalStyles.center}>
                       <Svg.VideoSvg />
                       <Animated.View style={animatedArrowStyle}>
                         <Icon
                           name={'chevron-down'}
-                          size={fontNormalize(12)}
+                          size={fontNormalize(14)}
                           color={EStyleSheet.value('$colors_danger')}
                         />
                       </Animated.View>
                     </View>
+                    <Text
+                      fontSize={fontNormalize(14)}
+                      weight="Medium"
+                      color={isDark ? 'white' : 'black'}
+                      style={styles.minWidthExerciseName}>
+                      {exerciseName}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -189,7 +187,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
               />
             )}
           </View>
-          <View style={[GlobalStyles.flex, GlobalStyles.row, styles.row3]}>
+          <View style={[GlobalStyles.row, styles.row3]}>
             <View>
               {(reps || weight) && (
                 <ContentDetailExercise
@@ -219,7 +217,10 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                   width={'100%' as any}
                   forceAndroidAutoplay={isAndroid}
                   webViewStyle={styles.webView}
-                  webViewProps={{startInLoadingState: true}}
+                  webViewProps={{
+                    startInLoadingState: true,
+                    shouldRasterizeIOS: true,
+                  }}
                   play={playing}
                   contentScale={0.75}
                   videoId={videoUrl}
@@ -238,7 +239,6 @@ const styles = StyleSheet.create({
   alignItemsStart: {alignSelf: 'flex-start'},
   contentVideo: {
     flex: 1,
-    backgroundColor: '#fff',
     marginTop: 5,
     marginHorizontal: 15,
     marginBottom: 10,
@@ -254,9 +254,9 @@ const styles = StyleSheet.create({
       height: 2,
     },
     elevation: 2,
-    shadowOpacity: 0.16,
+    shadowOpacity: 0.1,
     shadowRadius: 3.84,
-    borderRadius: 10,
+    borderRadius: 6,
     marginVertical: 7,
     minHeight: rWidth(60),
   },
@@ -265,13 +265,13 @@ const styles = StyleSheet.create({
     minHeight: rWidth(50),
   },
   containerDetailExercise: {
-    backgroundColor: '#ECF0EF',
+    backgroundColor: '#F6F6F6',
     padding: 5,
-    borderRadius: 100,
+    borderRadius: 10,
     paddingHorizontal: 10,
   },
   webView: {
-    backgroundColor: 'white',
+    backgroundColor: '$colors_dark',
     position: 'absolute',
     left: 0,
     bottom: 0,
@@ -283,12 +283,15 @@ const styles = StyleSheet.create({
   },
   contentButtonVideo: {
     ...GlobalStyles.center,
-    ...margin.ml7,
     paddingTop: 5,
   },
-  row3: {justifyContent: 'flex-end'},
+  row3: {justifyContent: 'flex-end', flex: 0.8, marginLeft: 15},
   flexEnd: {alignItems: 'flex-end'},
-  minWidthExerciseName: {minWidth: rWidth(50), maxWidth: '80%', marginRight: 5},
+  minWidthExerciseName: {
+    ...margin.ml7,
+    minWidth: rWidth(50),
+    maxWidth: '80%',
+  },
 });
 
 export {ExerciseItem};

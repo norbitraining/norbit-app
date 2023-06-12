@@ -117,7 +117,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
             ]}>
             <View style={GlobalStyles.flex}>
               <Text
-                fontSize={fontNormalize(18)}
+                fontSize={fontNormalize(22)}
                 weight="Medium"
                 color={isDark ? 'white' : 'black'}>
                 {item.columnName}
@@ -136,7 +136,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                 <View
                   style={[GlobalStyles.row, GlobalStyles.justifyContentEnd]}>
                   <Text
-                    fontSize={fontNormalize(14)}
+                    fontSize={fontNormalize(18)}
                     weight="Light"
                     color={isDark ? 'white' : 'black'}>
                     {card.selectedActivityType === 'round' && card.value1}

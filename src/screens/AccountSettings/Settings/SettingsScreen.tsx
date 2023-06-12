@@ -104,7 +104,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
         />
         <Text
           color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={fontNormalize(16)}
+          fontSize={fontNormalize(18)}
           align="left">
           {title}
         </Text>
@@ -128,7 +128,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
         onPress={handleItem}>
         <Text
           color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={fontNormalize(14)}
+          fontSize={fontNormalize(15)}
           align="left"
           weight="Light">
           {item.text}

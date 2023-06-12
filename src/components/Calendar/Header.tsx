@@ -139,7 +139,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
             onPress={onPress}
             activeOpacity={0.9}>
             <Text
-              fontSize={fontNormalize(monthSelected ? 24 : 22)}
+              fontSize={fontNormalize(monthSelected ? 28 : 26)}
               weight={monthSelected ? 'SemiBold' : 'Light'}
               color={monthSelected ? 'white' : '#747474'}
               style={GlobalStyles.textCapitalize}>
@@ -163,7 +163,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
             <Text
               color="white"
               style={margin.ml12}
-              fontSize={fontNormalize(14)}>
+              fontSize={fontNormalize(16)}>
               {getYear}
             </Text>
           </TouchableOpacity>

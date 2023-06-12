@@ -93,46 +93,50 @@ const TabBar: React.FC<TabBarProps> = ({
               onPress={onPress}
               onLongPress={onLongPress}
               activeOpacity={0.8}
-              style={[styles.tab, GlobalStyles.center]}>
+              style={styles.tab}>
               {isFocused && (
                 <View
                   style={isDark ? styles.tabSelectedDark : styles.tabSelected}
                 />
               )}
-              {item?.icon && (
-                <Icon
-                  name={item.icon}
-                  color={EStyleSheet.value(
-                    isFocused
-                      ? isDark
-                        ? '$colors_tabDark'
-                        : '$colors_dangerTab'
-                      : isDark
-                      ? '$colors_white'
-                      : '$colors_primary',
+              <View style={[styles.contentTabItem, GlobalStyles.center]}>
+                <View style={[GlobalStyles.center]}>
+                  {item?.icon && (
+                    <Icon
+                      name={item.icon}
+                      color={EStyleSheet.value(
+                        isFocused
+                          ? isDark
+                            ? '$colors_tabDark'
+                            : '$colors_dangerTab'
+                          : isDark
+                          ? '$colors_white'
+                          : '$colors_primary',
+                      )}
+                      size={24}
+                    />
                   )}
-                  size={24}
-                />
-              )}
-              {isFocused ? (
-                <>
-                  <Separator thickness={4} />
-                  <Text
-                    align="center"
-                    fontSize={12}
-                    color={EStyleSheet.value(
-                      isFocused
-                        ? isDark
-                          ? '$colors_tabDark'
-                          : '$colors_dangerTab'
-                        : isDark
-                        ? '$colors_white'
-                        : '$colors_primary',
-                    )}>
-                    {item?.label}
-                  </Text>
-                </>
-              ) : null}
+                  {isFocused ? (
+                    <>
+                      <Separator thickness={4} />
+                      <Text
+                        align="center"
+                        fontSize={12}
+                        color={EStyleSheet.value(
+                          isFocused
+                            ? isDark
+                              ? '$colors_tabDark'
+                              : '$colors_dangerTab'
+                            : isDark
+                            ? '$colors_white'
+                            : '$colors_primary',
+                        )}>
+                        {item?.label}
+                      </Text>
+                    </>
+                  ) : null}
+                </View>
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -150,6 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '$colors_schemeDark',
   },
+  contentTabItem: {flex: 0.9},
   containerTabDark: {
     left: 0,
     right: 0,
@@ -167,48 +172,28 @@ const styles = StyleSheet.create({
   contentTab: {
     flexDirection: 'row',
     backgroundColor: '#F5F5F5',
-    width: '80%',
-    borderRadius: 100,
-    marginBottom: 15,
-    paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
-  contentTabDarkCalendar: {
-    flexDirection: 'row',
-    backgroundColor: '$colors_schemeDark',
-    width: '80%',
-    borderRadius: 100,
-    marginBottom: 15,
+    width: '100%',
     paddingHorizontal: 20,
   },
   contentTabDark: {
     flexDirection: 'row',
     backgroundColor: '$colors_inputColorDark',
-    width: '80%',
-    borderRadius: 100,
-    marginBottom: 15,
+    width: '100%',
     paddingHorizontal: 20,
   },
   tab: {
+    alignItems: 'center',
     flex: 1,
     height: rHeight(55),
   },
   tabSelected: {
-    width: '70%',
+    width: '60%',
     marginBottom: 5,
     borderTopWidth: 2,
     borderColor: '$colors_dangerTab',
   },
   tabSelectedDark: {
-    width: '70%',
+    width: '60%',
     marginBottom: 5,
     borderTopWidth: 2,
     borderColor: '$colors_tabDark',

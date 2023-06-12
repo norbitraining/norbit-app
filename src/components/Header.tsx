@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({
       {showText && (
         <View style={styles.contentTitle}>
           <Text
-            fontSize={fontNormalize(26)}
+            fontSize={fontNormalize(32)}
             color={textColor}
             align="left"
             weight="SemiBold">

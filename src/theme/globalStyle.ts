@@ -10,11 +10,11 @@ const GlobalStyles = StyleSheet.create({
     backgroundColor: '$colors_white',
   },
   containerBottomDark: {
-    backgroundColor: '$colors_dark',
+    backgroundColor: '$colors_inputColorDark',
   },
-  containerBottomDarkCalendar: {backgroundColor: '$colors_schemeDark'},
+  containerBottomDarkCalendar: {backgroundColor: '$colors_inputColorDark'},
   containerBottomWhite: {
-    backgroundColor: '$colors_white',
+    backgroundColor: '#F5F5F5',
   },
   textCapitalize: {textTransform: 'capitalize'},
   textUppercase: {textTransform: 'uppercase'},

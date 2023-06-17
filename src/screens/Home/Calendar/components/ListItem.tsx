@@ -190,11 +190,13 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
                 return (
                   <ExerciseItem
                     key={indexExercise}
-                    exerciseName={exercise.exercise.exerciseName}
-                    videoUrl={exercise.exercise.videoUrl}
-                    rounds={exercise.rounds}
-                    reps={exercise.reps}
-                    weight={exercise.weight}
+                    exerciseName={exercise?.exercise?.exerciseName || ''}
+                    videoUrl={exercise?.exercise?.videoUrl || ''}
+                    rounds={exercise?.rounds || ''}
+                    reps={exercise?.reps || ''}
+                    weight={exercise?.weight || ''}
+                    time={exercise?.time || ''}
+                    distance={exercise?.distance || ''}
                   />
                 );
               })}

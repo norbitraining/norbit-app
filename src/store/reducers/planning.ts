@@ -42,6 +42,8 @@ export interface ExerciseList {
   weight: string;
   reps: string;
   rounds: any;
+  distance: any;
+  time: any;
   exercise: Exercise;
 }
 

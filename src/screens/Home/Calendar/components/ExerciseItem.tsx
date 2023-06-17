@@ -20,7 +20,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {trigger} from 'react-native-haptic-feedback';
-import Separator from 'components/Separator';
+
 import {Svg} from 'assets/svg';
 import {StyleSheet, fontNormalize, isAndroid, rHeight, rWidth} from 'utils';
 import YoutubePlayer from 'react-native-youtube-iframe';
@@ -29,14 +29,67 @@ type ExerciseItemProps = {
   exerciseName: string;
   rounds?: string;
   reps?: string;
+  distance?: string;
+  time?: string;
   weight?: string;
   videoUrl?: string;
 };
 
+interface Field {
+  label: string;
+  isWeight?: boolean;
+  percentage?: string;
+}
+
 const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
-  ({exerciseName, rounds, reps, weight, videoUrl}) => {
+  ({exerciseName, rounds, reps, distance, time, weight, videoUrl}) => {
     const scheme = useColorScheme();
     const isDark = useMemo(() => scheme === 'dark', [scheme]);
+
+    const fields = React.useMemo((): Field[] => {
+      return [
+        ...(rounds
+          ? [
+              {
+                label: `${rounds} ${Number(rounds) >= 0 ? 'Rondas' : ''}`,
+              },
+            ]
+          : []),
+        ...(distance
+          ? [
+              {
+                label: `${distance}`,
+              },
+            ]
+          : []),
+        ...(time
+          ? [
+              {
+                label: `${time}`,
+              },
+            ]
+          : []),
+        ...(reps
+          ? [
+              {
+                label: `${reps} ${
+                  Number(reps) >= 0 || reps.includes('/') || reps.includes('-')
+                    ? 'Reps'
+                    : ''
+                }`,
+              },
+            ]
+          : []),
+        ...(weight
+          ? [
+              {
+                label: `${weight}`,
+                isWeight: true,
+              },
+            ]
+          : []),
+      ];
+    }, [distance, reps, rounds, time, weight]);
 
     const [playing, setPlaying] = useState(false);
 
@@ -94,22 +147,25 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
       };
     });
 
-    const ContentDetailExercise = useCallback(
-      ({text, isWeight = false}: any) => {
+    const renderField = useCallback(
+      (field: Field, index: number) => {
         return (
           <View
+            key={index}
             style={[
               styles.containerDetailExercise,
               GlobalStyles.center,
               GlobalStyles.row,
               isDark && styles.containerDetailExerciseDark,
+              margin.mt5,
+              {maxWidth: field.percentage},
             ]}>
-            {isWeight && <Svg.WeightSvg style={margin.mr5} />}
+            {field.isWeight && <Svg.WeightSvg style={margin.mr5} />}
             <Text
               fontSize={fontNormalize(14)}
               weight="Light"
               color={isDark ? 'white' : 'black'}>
-              {text}
+              {field.label}
             </Text>
           </View>
         );
@@ -134,8 +190,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
           ],
         ]}
         needsOffscreenAlphaCompositing>
-        <View style={[GlobalStyles.rowSb, padding.ph15, padding.pv10]}>
-          <View style={[GlobalStyles.flex, GlobalStyles.row]}>
+        <View style={[GlobalStyles.rowSb, padding.ph12, padding.pv10]}>
+          <View style={[styles.contentTitleExercise, GlobalStyles.row]}>
             {!videoUrl && (
               <Text
                 fontSize={fontNormalize(14)}
@@ -154,11 +210,11 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
                   onPress={toggleVideo}>
                   <View style={GlobalStyles.row}>
                     <View style={GlobalStyles.center}>
-                      <Svg.VideoSvg />
+                      <Svg.VideoSvg width={fontNormalize(18)} />
                       <Animated.View style={animatedArrowStyle}>
                         <Icon
                           name={'chevron-down'}
-                          size={fontNormalize(14)}
+                          size={fontNormalize(13)}
                           color={EStyleSheet.value('$colors_danger')}
                         />
                       </Animated.View>
@@ -175,35 +231,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
               </View>
             )}
           </View>
-          <View
-            style={[
-              GlobalStyles.flex,
-              GlobalStyles.center,
-              videoUrl && styles.flexEnd,
-            ]}>
-            {(rounds || (reps && weight)) && (
-              <ContentDetailExercise
-                text={rounds ? `${rounds} Rondas` : `${reps} Reps`}
-              />
-            )}
-          </View>
-          <View style={[GlobalStyles.row, styles.row3]}>
-            <View>
-              {(reps || weight) && (
-                <ContentDetailExercise
-                  text={(rounds || !weight) && reps ? `${reps} Reps` : weight}
-                  isWeight={weight && (!rounds || !reps)}
-                />
-              )}
 
-              {rounds && reps && weight && (
-                <>
-                  <Separator thickness={7} />
-                  <ContentDetailExercise text={`${weight}`} isWeight />
-                </>
-              )}
-            </View>
-          </View>
+          <View style={styles.containerFields}>{fields.map(renderField)}</View>
         </View>
         {!!videoUrl && (
           <Animated.View style={animatedStyle}>
@@ -261,14 +290,26 @@ const styles = StyleSheet.create({
     minHeight: rWidth(60),
   },
   containerDark: {backgroundColor: '#131820'},
+  containerFields: {
+    ...GlobalStyles.row,
+    ...GlobalStyles.flex,
+    flexWrap: 'wrap',
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flex: 0.65,
+    paddingHorizontal: 5,
+  },
   containerMin: {
     minHeight: rWidth(50),
   },
+  contentTitleExercise: {flex: 0.35},
   containerDetailExercise: {
     backgroundColor: '#F6F6F6',
     padding: 5,
     borderRadius: 10,
     paddingHorizontal: 10,
+    marginLeft: 5,
   },
   webView: {
     backgroundColor: '$colors_dark',

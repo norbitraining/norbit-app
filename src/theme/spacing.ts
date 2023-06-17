@@ -16,13 +16,14 @@ export const margin = {
   mr7: {marginRight: rWidth(7)},
 };
 export const padding = {
-  pl12: {paddingLeft: rWidth(12)},
+  pl10: {paddingLeft: rWidth(10)},
   ph7: {paddingHorizontal: rWidth(7)},
   ph4: {paddingHorizontal: rWidth(4)},
   ph10: {paddingHorizontal: rWidth(10)},
   pv10: {paddingVertical: rWidth(10)},
   pv15: {paddingVertical: rWidth(15)},
   ph15: {paddingHorizontal: rWidth(15)},
+  ph12: {paddingHorizontal: rWidth(12)},
   ph20: {paddingHorizontal: rWidth(20)},
   pb5: {paddingBottom: rWidth(5)},
   pb7: {paddingBottom: rWidth(7)},

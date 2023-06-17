@@ -22,15 +22,16 @@ const EmptyPlanning: React.FC<EmptyPlanningProps> = React.memo(({}) => {
       <Svg.EmptyPlanningSvg
         fill={EStyleSheet.value(isDark ? '#D2D5DA' : '$colors_primary')}
         width={rHeight(95)}
+        height={rHeight(90)}
       />
       <Separator thickness={25} />
       <Text
-        fontSize={fontNormalize(28)}
+        fontSize={fontNormalize(32)}
         weight="Bold"
         color={EStyleSheet.value(isDark ? '#D2D5DA' : '$colors_primary')}>
         ¡Oops!{' '}
         <Text
-          fontSize={fontNormalize(24)}
+          fontSize={fontNormalize(30)}
           weight="Light"
           color={EStyleSheet.value(isDark ? '#D2D5DA' : '$colors_primary')}>
           rest day.

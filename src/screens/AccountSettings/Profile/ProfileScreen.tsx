@@ -108,7 +108,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
         scheme === 'dark' ? GlobalStyles.container : GlobalStyles.containerWhite
       }>
       <Header
-        text={HeaderText.settings}
+        text={HeaderText.editProfile}
         showBackButton={true}
         textColor={EStyleSheet.value(
           isDark ? '$colors_white' : '$colors_black',

@@ -24,7 +24,7 @@ import Animated, {
 import {trigger} from 'react-native-haptic-feedback';
 import {ExerciseItem} from './ExerciseItem';
 import {PlanningCard, PlanningColumn} from 'store/reducers/planning';
-import {fontNormalize, getLabelActivityType} from 'utils';
+import {fontNormalize, getLabelActivityType, isDate} from 'utils';
 import Separator from 'components/Separator';
 import {format} from 'date-fns';
 import moment from 'moment';
@@ -234,7 +234,10 @@ const DetailByTime = ({
             fontSize={13}
             weight="Light"
             color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-            {format(new Date(card.value1), 'mm:ss')} min
+            {isDate(card.value1) && card.value1
+              ? format(new Date(card.value1), 'mm:ss')
+              : '00:00'}{' '}
+            min
           </Text>
         </View>
       )}
@@ -250,7 +253,10 @@ const DetailByTime = ({
               fontSize={13}
               weight="Light"
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              {format(moment(card.value1).toDate(), 'mm:ss')} min
+              {isDate(card.value1) && card.value1
+                ? format(moment(card.value1).toDate(), 'mm:ss')
+                : '00:00'}{' '}
+              min
             </Text>
           </View>
           <View style={margin.mh5}>
@@ -311,7 +317,9 @@ const DetailByTime = ({
                 fontSize={13}
                 weight="Light"
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                {format(new Date(card.value2), 'mm:ss')}
+                {isDate(card.value2) && card.value2
+                  ? format(new Date(card.value2), 'mm:ss')
+                  : '00:00'}
               </Text>
             </View>
             <View style={margin.mh5}>
@@ -332,7 +340,9 @@ const DetailByTime = ({
                 fontSize={13}
                 weight="Light"
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                {format(new Date(card.value3), 'mm:ss')}
+                {isDate(card.value3) && card.value3
+                  ? format(new Date(card.value3), 'mm:ss')
+                  : '00:00'}
               </Text>
             </View>
           </View>

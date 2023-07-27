@@ -94,3 +94,13 @@ export const getLabelActivityType = (
     return 'Tabata';
   }
 };
+
+export function isDate(dateString: string): boolean {
+  const date = new Date(dateString);
+
+  return (
+    date instanceof Date &&
+    !isNaN(date.getTime()) &&
+    date.toString() !== 'Invalid Date'
+  );
+}

@@ -48,7 +48,7 @@ const reducer = persistReducer(
   {
     key: 'root',
     storage: AsyncStorage,
-    blacklist: [''],
+    blacklist: ['planning'],
   },
   rootReducer,
 );

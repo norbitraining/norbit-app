@@ -51,7 +51,13 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
         ...(rounds
           ? [
               {
-                label: `${rounds} ${Number(rounds) >= 0 ? 'Rondas' : ''}`,
+                label: `${rounds} ${
+                  Number(rounds) >= 0
+                    ? Number(rounds) > 1
+                      ? 'Rondas'
+                      : 'Ronda'
+                    : ''
+                }`,
               },
             ]
           : []),

@@ -9,11 +9,12 @@ import {ListItem} from './ListItem';
 type ItemAnimationProps = {
   viewableItems: Animated.SharedValue<ViewToken[]>;
   item: PlanningColumn;
+  planningId: number;
   index: number;
 };
 
 const ItemAnimation: React.FC<ItemAnimationProps> = React.memo(
-  ({item, viewableItems, index}) => {
+  ({item, planningId, viewableItems, index}) => {
     const scheme = useColorScheme();
     const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
@@ -38,7 +39,7 @@ const ItemAnimation: React.FC<ItemAnimationProps> = React.memo(
       <Animated.View
         style={[isDark ? styles.containerDark : styles.container, rStyle]}
         needsOffscreenAlphaCompositing>
-        <ListItem item={item} index={index} />
+        <ListItem item={item} planningId={planningId} index={index} />
       </Animated.View>
     );
   },

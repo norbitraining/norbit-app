@@ -190,10 +190,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
         style={[
           styles.container,
           isDark && styles.containerDark,
-          (!videoUrl || !weight || !rounds || !reps) && [
-            GlobalStyles.center,
-            styles.containerMin,
-          ],
+          styles.containerMin,
+          (!videoUrl || !weight || !rounds || !reps) && [GlobalStyles.center],
         ]}
         needsOffscreenAlphaCompositing>
         <View style={[GlobalStyles.rowSb, padding.ph12, padding.pv10]}>

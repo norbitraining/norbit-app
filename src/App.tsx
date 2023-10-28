@@ -10,6 +10,7 @@ import store from 'store';
 import Router from 'router';
 
 import {AlertProvider} from 'context/alertContext';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 const persistor = persistStore(store);
 
@@ -19,11 +20,13 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaProvider>
-          <AlertProvider>
-            <Router />
-          </AlertProvider>
-        </SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <SafeAreaProvider>
+            <AlertProvider>
+              <Router />
+            </AlertProvider>
+          </SafeAreaProvider>
+        </BottomSheetModalProvider>
       </PersistGate>
     </Provider>
   );

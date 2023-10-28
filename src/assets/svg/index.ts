@@ -7,6 +7,7 @@ import ExerciseCardSvg from './exerciseCard.svg';
 import WeightSvg from './weight.svg';
 import VideoSvg from './video.svg';
 import EmptyPlanningSvg from './empty-planning.svg';
+import SendSvg from './send.svg';
 
 const Svg = {
   PasswordSvg,
@@ -18,5 +19,6 @@ const Svg = {
   SadSvg,
   MoreSvg,
   EmptyPlanningSvg,
+  SendSvg,
 };
 export {Svg};

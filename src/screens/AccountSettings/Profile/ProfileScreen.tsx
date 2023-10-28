@@ -97,7 +97,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
 
     updateProfileAction({
       ...values,
-      gender: values.gender === 'M' ? 0 : 1,
+      gender: values.gender === 'M' ? 1 : 0,
       birthday: moment(values.birthday, 'DD/MM/YYYY').format('YYYY-MM-DD'),
     });
   };

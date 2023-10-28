@@ -12,6 +12,7 @@ import {margin, padding} from 'theme/spacing';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Animated, {
   Extrapolate,
+  FadeIn,
   interpolate,
   measure,
   runOnUI,
@@ -23,29 +24,48 @@ import Animated, {
 } from 'react-native-reanimated';
 import {trigger} from 'react-native-haptic-feedback';
 import {ExerciseItem} from './ExerciseItem';
-import {PlanningCard, PlanningColumn} from 'store/reducers/planning';
+import {
+  PlanningCard,
+  PlanningColumn,
+  getRecordByPlanningColumn,
+} from 'store/reducers/planning';
 import {fontNormalize, getLabelActivityType, isDate} from 'utils';
 import Separator from 'components/Separator';
 import {format} from 'date-fns';
 import moment from 'moment';
+import ButtonCheck from './ButtonCheck';
+import {useSelector} from 'store/reducers/rootReducers';
+import ColumnNote from './ColumnNote';
+import ContainerMessage from './ContainerMessage';
 
 type ListItemProps = {
   item: PlanningColumn;
+  planningId: number;
   index: number;
 };
 
-const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
+const ListItem: React.FC<ListItemProps> = React.memo(({item, planningId}) => {
   const scheme = useColorScheme();
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
-  const [expanded, setExpanded] = useState(true);
+  const [isFinishColumn, setFinishColumn] = useState<boolean>(false);
+
+  const handleRecordByPlanningColumn = React.useMemo(
+    () => getRecordByPlanningColumn(planningId, item.id),
+    [planningId, item.id],
+  );
+
+  const records = useSelector(handleRecordByPlanningColumn);
+  const record = React.useMemo(() => records?.[0] || null, [records]);
+
+  const [expanded, setExpanded] = useState<boolean>(!record?.isFinish);
   const aref = useAnimatedRef<View>();
   const height = useSharedValue<number>(100);
   const animatedVar = useDerivedValue(
     () => (expanded ? withTiming(1) : withTiming(0)),
     [expanded],
   );
-  const iconRotate = useSharedValue<number>(1);
+  const iconRotate = useSharedValue<number>(record?.isFinish ? 0 : 1);
 
   const onLayout = useCallback(
     (_event: LayoutChangeEvent) => {
@@ -59,23 +79,43 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
     [height],
   );
 
-  const toggleAccordion = () => {
+  const toggleAccordion = React.useCallback(() => {
     if (height.value === 0) {
       runOnUI(() => {
         'worklet';
-
-        height.value = measure(aref).height;
+        const _height = measure(aref)?.height;
+        if (!_height) {
+          return;
+        }
+        height.value = _height;
       })();
     }
-    iconRotate.value = withTiming(expanded ? 0 : 1);
-    trigger('impactLight', {
-      enableVibrateFallback: true,
-      ignoreAndroidSystemSettings: false,
+    isFinishColumn && setFinishColumn(false);
+    setExpanded(prevExpanded => {
+      iconRotate.value = withTiming(prevExpanded ? 0 : 1);
+      trigger('impactLight', {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+      return !prevExpanded;
     });
-    setExpanded(!expanded);
-  };
+  }, [aref, height, iconRotate, isFinishColumn]);
+
+  const onFinishColumn = React.useCallback(() => {
+    iconRotate.value = withTiming(0);
+    setFinishColumn(true);
+    setExpanded(false);
+  }, [iconRotate]);
 
   const animatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animatedVar.value,
+      [0, 0.4, 0.8, 1],
+      [0, 0, 0.4, 1],
+      {
+        extrapolateRight: Extrapolate.CLAMP,
+      },
+    );
     return {
       height: interpolate(
         animatedVar.value,
@@ -83,9 +123,8 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
         [0, height.value],
         Extrapolate.CLAMP,
       ),
-      opacity: withTiming(expanded ? 1 : 0),
+      opacity,
       width: '100%',
-      paddingHorizontal: 3,
     };
   });
 
@@ -115,9 +154,16 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
               padding.pb7,
               GlobalStyles.alignItemsStart,
             ]}>
-            <View style={GlobalStyles.flex}>
+            <View style={[GlobalStyles.flex, GlobalStyles.row]}>
+              <View style={margin.mr10}>
+                <ButtonCheck
+                  onFinishColumn={onFinishColumn}
+                  planningId={planningId}
+                  column={item}
+                />
+              </View>
               <Text
-                fontSize={fontNormalize(22)}
+                fontSize={fontNormalize(20)}
                 weight="Medium"
                 color={isDark ? 'white' : 'black'}>
                 {item.columnName}
@@ -164,26 +210,26 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <Animated.View style={animatedStyle} needsOffscreenAlphaCompositing>
+          {Boolean(record?.isFinish) && !record?.note && isFinishColumn && (
+            <Animated.View
+              style={[padding.ph4, margin['mb-10']]}
+              entering={FadeIn.springify(250)}>
+              <ColumnNote planningId={planningId} column={item} />
+            </Animated.View>
+          )}
+          <Animated.View
+            pointerEvents={expanded ? 'auto' : 'none'}
+            style={animatedStyle}
+            needsOffscreenAlphaCompositing>
             <View
               ref={aref}
               onLayout={onLayout}
               needsOffscreenAlphaCompositing
               style={padding.ph4}>
-              {!card.comment && <Separator thickness={5} />}
-              {!!card.comment && (
-                <View style={[padding.pb9, margin.mt5]}>
-                  <Text style={margin.mb5} color={isDark ? 'white' : 'black'}>
-                    Indicaciones:
-                  </Text>
-                  <Text
-                    weight="Light"
-                    color={
-                      isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
-                    }>
-                    {card.comment}
-                  </Text>
-                </View>
+              <ColumnNote planningId={planningId} column={item} />
+              <Separator thickness={8} />
+              {Boolean(card.comment) && (
+                <ContainerMessage label="Indicaciones" value={card.comment} />
               )}
 
               {card.exerciseList.map((exercise, indexExercise) => {

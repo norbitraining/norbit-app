@@ -3,7 +3,7 @@ import {
   useColorScheme,
   View,
   ViewToken,
-  ListRenderItemInfo,
+  SectionListRenderItemInfo,
   SectionList,
   ViewProps,
   useWindowDimensions,
@@ -120,10 +120,11 @@ const CalendarScreen: React.FC<CalendaryScreenProps> = ({
   }, [getPlanning]);
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
+    ({item, index, section}: SectionListRenderItemInfo<any, any>) => {
       return (
         <ItemAnimation
           item={item}
+          planningId={section.id}
           index={index}
           viewableItems={viewableItems}
         />

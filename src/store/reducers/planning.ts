@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+const PREFIX = 'planning';
+
 export type PlanningActivityType =
   | 'none'
   | 'round'
@@ -15,11 +17,19 @@ export interface IPlanning {
   data: PlanningColumn[];
 }
 
+export interface PlanningRecord {
+  id: number;
+  isFinish?: boolean;
+  note?: string | null;
+  time?: string | null;
+}
+
 export interface PlanningColumn {
   id: number;
   planningColumnId: number;
   columnName: string;
   ord: number;
+  record: PlanningRecord[];
   cards: PlanningCard[];
 }
 
@@ -57,12 +67,14 @@ export interface Exercise {
 export interface IPlanningReducer {
   planningList: IPlanning[];
   isLoading: boolean;
+  isLoadingRecord: boolean;
 }
 
 // Define the initial state using that type
 const initialState: IPlanningReducer = {
   planningList: [],
   isLoading: false,
+  isLoadingRecord: false,
 };
 
 export const planningSlice = createSlice({
@@ -74,15 +86,85 @@ export const planningSlice = createSlice({
       state.isLoading = true;
       action.payload.date;
     },
+    finishPlanningColumnAction: (
+      state,
+      action: PayloadAction<{
+        planningId: number;
+        planningColumnId: number;
+        isFinish?: boolean;
+        note?: string;
+      }>,
+    ) => {
+      state.isLoadingRecord = true;
+      action.payload.planningId;
+      action.payload.planningColumnId;
+      action.payload.isFinish;
+    },
+    updatePlanningColumnRecordAction: (
+      state,
+      action: PayloadAction<{
+        recordId: number;
+        planningId: number;
+        planningColumnId: number;
+        isFinish?: boolean;
+        note?: string;
+        time?: string;
+      }>,
+    ) => {
+      state.isLoadingRecord = true;
+      action.payload.recordId;
+    },
+    planningColumnRecordSuccessAction: state => {
+      state.isLoadingRecord = false;
+    },
+    planningRecordUpdateSuccessAction: (
+      state,
+      action: PayloadAction<{
+        planningIndex: number;
+        planningColumnIndex: number;
+        record: PlanningRecord;
+      }>,
+    ) => {
+      state.isLoading = false;
+      state.isLoadingRecord = false;
+      state.planningList[action.payload.planningIndex].data[
+        action.payload.planningColumnIndex
+      ].record = [action.payload.record];
+    },
     getPlanningSuccessAction: (state, action: PayloadAction<IPlanning[]>) => {
       state.isLoading = false;
+      state.isLoadingRecord = false;
       state.planningList = action.payload;
     },
     planningFailed: state => {
       state.isLoading = false;
+      state.isLoadingRecord = false;
     },
   },
 });
+
+interface GlobalState {
+  [PREFIX]: IPlanningReducer;
+}
+
+export const getRecordByPlanningColumn =
+  (planningId: number, columnId: number) =>
+  ({planning: {planningList}}: GlobalState): PlanningRecord[] => {
+    const indexPlanning = planningList.findIndex(x => x.id === planningId);
+    if (indexPlanning === -1) {
+      return [];
+    }
+
+    const indexPlanningColumn = planningList[indexPlanning].data.findIndex(
+      x => x.id === columnId,
+    );
+
+    if (indexPlanningColumn === -1) {
+      return [];
+    }
+
+    return planningList[indexPlanning].data[indexPlanningColumn].record;
+  };
 
 export const planningActions = planningSlice.actions;
 

@@ -10,10 +10,12 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "env:local": "sh set-enviroment.sh local",
     "env:dev": "sh set-enviroment.sh dev",
-    "env:prod": "sh set-enviroment.sh prod"
+    "env:prod": "sh set-enviroment.sh prod",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@freakycoder/react-native-picker-modal": "^0.1.2",
+    "@gorhom/bottom-sheet": "^4.5.1",
     "@hookform/resolvers": "^3.0.0",
     "@react-native-async-storage/async-storage": "^1.17.12",
     "@react-native-community/datetimepicker": "^7.0.1",
@@ -52,7 +54,7 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^12.0.2",
-    "react-native-youtube-iframe": "^2.2.2",
+    "react-native-youtube-iframe": "^2.3.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
@@ -79,6 +81,7 @@
     "eslint": "^7.32.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "0.72.3",
+    "patch-package": "^8.0.0",
     "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "18.1.0",
     "redux-tools": "^3.2.0",

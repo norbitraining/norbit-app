@@ -40,7 +40,7 @@ class Api {
           return Promise.reject(ex);
         }
       }
-      return e.response?.status;
+      throw e;
     }
   };
 
@@ -60,7 +60,7 @@ class Api {
           return Promise.reject(ex);
         }
       }
-      return e.response?.status;
+      throw e;
     }
   };
 
@@ -81,7 +81,7 @@ class Api {
           return Promise.reject(ex);
         }
       }
-      return e.response?.status;
+      throw e;
     }
   };
 

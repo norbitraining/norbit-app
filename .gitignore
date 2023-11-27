@@ -71,3 +71,4 @@ env.prod
 firebaseEnviroments
 ios/Podfile.lock
 yarn.lock
+release/app-release.aab

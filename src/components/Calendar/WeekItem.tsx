@@ -13,6 +13,7 @@ import {getDate, getDay} from 'date-fns';
 import {fontNormalize} from 'utils';
 import Text from 'components/Text';
 import {trigger} from 'react-native-haptic-feedback';
+import {useSelector} from 'store/reducers/rootReducers';
 
 function WeekItemAreEqual(
   prevOrderBook: WeekItemProps,
@@ -25,8 +26,15 @@ function WeekItemAreEqual(
 }
 
 export const WeekItem: FC<WeekItemProps> = memo(
-  ({date, selectedDate, onSelectDate}) => {
+  ({date, selectedDate: _selectedDate, onSelectDate}) => {
     const day = getDate(date);
+
+    const isBlocked = useSelector(x => x.coaches.coachSelected?.blocked);
+
+    const selectedDate = React.useMemo(
+      () => !isBlocked && _selectedDate,
+      [_selectedDate, isBlocked],
+    );
 
     const selectDate = useCallback(() => {
       trigger('impactLight', {
@@ -64,7 +72,10 @@ export const WeekItem: FC<WeekItemProps> = memo(
 
     return (
       <View style={containerStyle}>
-        <TouchableOpacity onPress={selectDate} style={dateSelectedStyle}>
+        <TouchableOpacity
+          disabled={isBlocked}
+          onPress={selectDate}
+          style={dateSelectedStyle}>
           <Text
             color={selectedDate ? '#E1251B' : '#7B7B7B'}
             weight={selectedDate ? 'Medium' : 'Regular'}

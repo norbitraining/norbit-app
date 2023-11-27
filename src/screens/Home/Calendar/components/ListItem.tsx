@@ -44,7 +44,7 @@ type ListItemProps = {
   index: number;
 };
 
-const ListItem: React.FC<ListItemProps> = React.memo(({item, planningId}) => {
+const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
   const scheme = useColorScheme();
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
@@ -72,8 +72,9 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item, planningId}) => {
       if (_event.nativeEvent.layout.height < 100) {
         return;
       }
+
       height.value = withTiming(_event.nativeEvent.layout.height, {
-        duration: 0,
+        duration: 50,
       });
     },
     [height],
@@ -235,7 +236,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item, planningId}) => {
               {card.exerciseList.map((exercise, indexExercise) => {
                 return (
                   <ExerciseItem
-                    key={indexExercise}
+                    key={String(indexExercise + planningId)}
                     exerciseName={exercise?.exercise?.exerciseName || ''}
                     videoUrl={exercise?.exercise?.videoUrl || ''}
                     rounds={exercise?.rounds || ''}
@@ -252,7 +253,7 @@ const ListItem: React.FC<ListItemProps> = React.memo(({item, planningId}) => {
       ))}
     </>
   );
-});
+};
 
 const DetailByTime = ({
   card,

@@ -7,10 +7,12 @@ import {select} from 'redux-saga/effects';
 
 import userReducer from './user';
 import planningReducer from './planning';
+import coachesReducer from './coaches';
 
 const rootReducer = combineReducers({
   user: userReducer,
   planning: planningReducer,
+  coaches: coachesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

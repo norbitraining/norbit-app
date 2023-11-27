@@ -1,9 +1,9 @@
 import API, {VERSION} from './api';
 
 const PlanningServices = {
-  getPlanning: (date: string) => {
+  getPlanning: (date: string, coachId?: number) => {
     return API.get(
-      `/${VERSION}/panel/planning/planning-by-athlete?date=${date}`,
+      `/${VERSION}/panel/planning/planning-by-athlete?date=${date}&coachId=${coachId}`,
     );
   },
   finishPlanningColumn: (data: {

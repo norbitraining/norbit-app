@@ -9,6 +9,7 @@ export const margin = {
   mh5: {marginHorizontal: rWidth(5)},
   mh25: {marginHorizontal: rWidth(25)},
   mb5: {marginBottom: rWidth(5)},
+  mb10: {marginBottom: rWidth(10)},
   mt3: {marginTop: rWidth(3)},
   mt5: {marginTop: rWidth(5)},
   mt10: {marginTop: rWidth(10)},

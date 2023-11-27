@@ -32,6 +32,8 @@ import {
 } from 'react-native';
 import {format} from 'date-fns';
 import {StyleSheet} from 'utils';
+import {useSelector} from 'store/reducers/rootReducers';
+import {PlanningFilter} from './PlanningFilter';
 
 const getItemLayout = (_: any, index: number) => ({
   length: itemWidth,
@@ -43,12 +45,14 @@ const keyExtractor = (_: Date, index: number) =>
   `${_.toDateString()} - ${index}`;
 
 const CalendarComponent: FC<CalendarProps> = memo(
-  ({date, language, onPressDate, selectedColor}) => {
+  ({date, language, onPressDate, selectedColor, onChangePlanningFilter}) => {
     const scheme = useColorScheme();
     const [selectedDate, setSelectedDate] = useState(date);
     // to get current page's month
     const [appearDate, setAppearDate] = useState(date);
     const flatListRef: LegacyRef<any> = useRef<FlatList>();
+
+    const isBlocked = useSelector(x => x.coaches.coachSelected?.blocked);
 
     const wholeWeek = useMemo(
       () => createWholeWeek(selectedDate),
@@ -205,6 +209,7 @@ const CalendarComponent: FC<CalendarProps> = memo(
           <FlatList
             ref={flatListRef}
             data={weeks}
+            pointerEvents={isBlocked ? 'none' : 'auto'}
             extraData={selectedDate}
             viewabilityConfig={_viewConfigRef.current}
             horizontal
@@ -226,6 +231,7 @@ const CalendarComponent: FC<CalendarProps> = memo(
             keyExtractor={keyExtractor}
           />
         )}
+        <PlanningFilter onChangePlanningFilter={onChangePlanningFilter} />
       </View>
     );
   },

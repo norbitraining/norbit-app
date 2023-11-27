@@ -41,6 +41,23 @@ const normalize = (size: number, _based: string = 'width') => {
   }
 };
 
+export const getInitials = (fullName: string) => {
+  return fullName
+    .trim()
+    .split(' ')
+    .reduce(
+      (acc, cur, idx, arr) =>
+        acc +
+        (arr.length > 1
+          ? idx === 0 || idx === arr.length - 1
+            ? cur.substring(0, 1)
+            : ''
+          : cur.substring(0, 2)),
+      '',
+    )
+    .toUpperCase();
+};
+
 export const rWidth = (width: number): number => {
   return normalize(width, 'width');
 };

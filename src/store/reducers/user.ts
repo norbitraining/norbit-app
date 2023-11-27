@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAction, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {RootState} from './rootReducers';
 
 export type UserRole = 'superadmin' | 'admin' | 'coach' | 'athlete';
@@ -52,6 +52,7 @@ export const userSlice = createSlice({
   name: 'user',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
+  extraReducers: builder => builder.addCase(clearAllAction, () => initialState),
   reducers: {
     userAction: (state, action: PayloadAction<{userId: string}>) => {
       action.payload.userId;
@@ -173,6 +174,8 @@ export const userSlice = createSlice({
 });
 
 export const userActions = userSlice.actions;
+
+export const clearAllAction = createAction('CLEAR_ALL_ACTION');
 
 // Other code such as selectors can use the imported `RootState` type
 export const getUser = (state: RootState) => state.user;

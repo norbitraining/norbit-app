@@ -16,7 +16,6 @@ import {
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useSharedValue} from 'react-native-reanimated';
 
-import Icon from 'react-native-vector-icons/Feather';
 import Text from 'components/Text';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -29,6 +28,8 @@ import {GlobalStyles} from 'theme/globalStyle';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {trigger} from 'react-native-haptic-feedback';
 import {fontNormalize} from 'utils';
+import CoachSelection from 'components/CoachSelection';
+import {useSelector} from 'store/reducers/rootReducers';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 
@@ -38,6 +39,8 @@ export const Header: FC<CalendarHeaderProps> = memo(
     const [showModalYears, setShowModalYears] = useState<boolean>(false);
     const [fullDate, setFullDate] = useState<Date>(new Date());
     const insets = useSafeAreaInsets();
+
+    const isBlocked = useSelector(x => x.coaches.coachSelected?.blocked);
 
     useEffect(() => {
       if (!currentDate) {
@@ -135,20 +138,21 @@ export const Header: FC<CalendarHeaderProps> = memo(
 
         return (
           <TouchableOpacity
+            disabled={isBlocked}
             style={[GlobalStyles.flex, GlobalStyles.center]}
             onPress={onPress}
             activeOpacity={0.9}>
             <Text
-              fontSize={fontNormalize(monthSelected ? 28 : 26)}
-              weight={monthSelected ? 'SemiBold' : 'Light'}
-              color={monthSelected ? 'white' : '#747474'}
+              fontSize={fontNormalize(monthSelected && !isBlocked ? 26 : 24)}
+              weight={monthSelected && !isBlocked ? 'SemiBold' : 'Light'}
+              color={monthSelected && !isBlocked ? 'white' : '#747474'}
               style={GlobalStyles.textCapitalize}>
               {getMonthName(index)}
             </Text>
           </TouchableOpacity>
         );
       },
-      [currentMonth],
+      [currentMonth, isBlocked],
     );
 
     return (
@@ -156,6 +160,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
         <View
           style={[GlobalStyles.rowSb, padding.pb9, padding.ph20, margin.mt5]}>
           <TouchableOpacity
+            disabled={isBlocked}
             style={GlobalStyles.row}
             activeOpacity={0.8}
             onPress={onPressDatePicker}>
@@ -167,11 +172,10 @@ export const Header: FC<CalendarHeaderProps> = memo(
               {getYear}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={GlobalStyles.row} activeOpacity={0.8}>
-            <Icon name="bell" size={24} color="white" />
-          </TouchableOpacity>
+          <CoachSelection />
         </View>
         <Carousel
+          enabled={!isBlocked}
           ref={ref}
           {...baseOptions}
           style={carouselStyle}

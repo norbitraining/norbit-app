@@ -9,18 +9,25 @@ import PlanningServices from 'services/planning-services';
 import {onError, safe} from 'utils/functions-saga';
 import {appSelect} from 'store/reducers/rootReducers';
 import _ from 'lodash';
+import {coachesActions} from 'store/reducers/coaches';
 
 function* getPlanningSaga(
   action: PayloadAction<{
     date: string;
   }>,
 ) {
+  const currentCoachSelected = yield* appSelect(
+    state => state.coaches.coachSelected,
+  );
+
   const data: {result: IPlanning[]} = yield PlanningServices.getPlanning(
     action.payload.date,
+    currentCoachSelected?.coach.id,
   );
   const planningList = data.result;
 
   yield put(planningActions.getPlanningSuccessAction(planningList));
+  yield put(coachesActions.getCoachesAction());
 }
 
 function* finishPlanningColumnSaga(

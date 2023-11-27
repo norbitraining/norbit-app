@@ -2,7 +2,7 @@
 
 
 #import <React/RCTBundleURLProvider.h>
-#import "RNSplashScreen.h"
+#import "RNBootSplash.h"
 #import <Firebase.h>
 
 
@@ -19,8 +19,6 @@
   self.initialProps = @{};
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   self.window.rootViewController.view.backgroundColor = [UIColor colorWithRed:0.06 green:0.07 blue:0.08 alpha:1.0];
-  [RNSplashScreen show];
-
   return YES;
 }
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
@@ -32,13 +30,15 @@
 #endif
 }
 
-/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
-///
-/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
-/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
-/// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
-- (BOOL)concurrentRootEnabled
-{
-  return true;
+- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
+                          moduleName:(NSString *)moduleName
+                           initProps:(NSDictionary *)initProps {
+  UIView *rootView = [super createRootViewWithBridge:bridge
+                                          moduleName:moduleName
+                                           initProps:initProps];
+
+  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
+
+  return rootView;
 }
 @end

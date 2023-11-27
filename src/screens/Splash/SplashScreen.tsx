@@ -1,10 +1,10 @@
 import React from 'react';
 import {useEffect} from 'react';
-import RNSplashScreen from 'react-native-splash-screen';
+import BootSplash from 'react-native-bootsplash';
 
 const SplashScreen = () => {
   useEffect(() => {
-    RNSplashScreen.hide(); //hides the splash screen on app load.
+    BootSplash.hide({fade: true}); //hides the splash screen on app load.
   }, []);
 
   return <></>;

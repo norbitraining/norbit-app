@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {IUserRequest, userActions} from 'store/reducers/user';
+import {IUserRequest, clearAllAction, userActions} from 'store/reducers/user';
 import {all, put, takeLatest} from 'redux-saga/effects';
 import AuthServices from 'services/auth-services';
 
@@ -121,6 +121,7 @@ function* forgotPasswordSaga(
 function* logoutSaga() {
   try {
     yield put(userActions.logoutUserSuccess());
+    yield put(clearAllAction());
     navigationRef.reset({
       index: 0,
       routes: [{name: Screen.SIGN_IN}],

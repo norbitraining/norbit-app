@@ -28,8 +28,14 @@ const GlobalStyles = StyleSheet.create({
   alignItemsStart: {
     alignItems: 'flex-start',
   },
+  alignItemsCenter: {
+    alignItems: 'center',
+  },
   justifyContentEnd: {
     justifyContent: 'flex-end',
+  },
+  justifyContentCenter: {
+    justifyContent: 'center',
   },
   flex: {flex: 1},
   center: {
@@ -44,6 +50,9 @@ const GlobalStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  hide: {
+    display: 'none',
   },
   underlineText: {textDecorationLine: 'underline'},
 });

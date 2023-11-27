@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {clearAllAction} from './user';
 
 const PREFIX = 'planning';
 
@@ -81,6 +82,7 @@ export const planningSlice = createSlice({
   name: 'planning',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
+  extraReducers: builder => builder.addCase(clearAllAction, () => initialState),
   reducers: {
     getPlanningAction: (state, action: PayloadAction<{date: string}>) => {
       state.isLoading = true;

@@ -18,7 +18,7 @@ import {
 } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import RNSplashScreen from 'react-native-splash-screen';
+import BootSplash from 'react-native-bootsplash';
 
 import SignInScreen from 'screens/Auth/SignIn';
 import SignInChangePasswordScreen from 'screens/Auth/SignInChangePassword';
@@ -35,6 +35,7 @@ import {
   Screen,
   validateShownTabBar,
 } from 'utils/constants/screens';
+import {coachesActions} from 'store/reducers/coaches';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,7 +50,9 @@ export type RouterParamList = {
   AppRouter: {};
 };
 
-export interface RouterProps {}
+export interface RouterProps {
+  getCoachesAction: typeof coachesActions.getCoachesAction;
+}
 
 function BottomTabNavigator() {
   const scheme = useColorScheme();
@@ -111,7 +114,7 @@ const generateMainStyleScheme = ({
   };
 };
 
-const Router: React.FC<RouterProps> = ({}) => {
+const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
   const colorScheme = useColorScheme();
   const currentUser = useSelector(x => x.user);
 
@@ -137,10 +140,17 @@ const Router: React.FC<RouterProps> = ({}) => {
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      RNSplashScreen.hide();
+      BootSplash.hide({fade: true});
     }, 500);
     return () => clearTimeout(timeout);
   }, []);
+
+  React.useEffect(() => {
+    if (!currentUser.isLoggedIn) {
+      return;
+    }
+    getCoachesAction();
+  }, [currentUser.isLoggedIn, getCoachesAction]);
 
   return (
     <>

@@ -10,7 +10,7 @@
     android:allowBackup="false"
     android:usesCleartextTraffic="true"
     android:hardwareAccelerated="true"
-    android:theme="@style/AppTheme"
+    android:theme="@style/BootTheme"
   >
       <activity
       android:name=".MainActivity"

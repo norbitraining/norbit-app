@@ -7,6 +7,10 @@ export const Label = {
   emailSend: 'Email enviado',
   emailSendDescription:
     'Le hemos enviado un correo electrónico con instrucciones sobre cómo restablecer su contraseña.\n\nPor favor, revise su bandeja de entrada y si no encuentra el correo electrónico en su bandeja de entrada, revise su carpeta de correo no deseado o spam.',
+  coaches: 'Entrenadores',
+  coachFemale: 'Entrenadora',
+  coachMale: 'Entrenador',
+  withoutCoach: 'Sin entrenador',
 };
 
 export const HeaderText = {
@@ -39,6 +43,7 @@ export const ButtonText = {
   goToLogin: 'Ir al inicio',
   logOut: 'Cerrar sesión',
   changePassword: 'Cambiar contraseña',
+  retry: 'Reintentar',
 };
 
 export const ValidationText = {

@@ -1,5 +1,7 @@
 import {NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
-export interface CalendarProps extends DefaultProps, CalendarHeaderProps {}
+export interface CalendarProps extends DefaultProps, CalendarHeaderProps {
+  onChangePlanningFilter: (index: number) => void;
+}
 
 export type WeekItemProps = Pick<DefaultProps, 'date'> & {
   selectedDate: boolean;

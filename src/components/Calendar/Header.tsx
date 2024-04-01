@@ -19,10 +19,9 @@ import {useSharedValue} from 'react-native-reanimated';
 import Text from 'components/Text';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import {CalendarHeaderProps, createLocalWeek} from './helpers';
+import {CalendarHeaderProps} from './helpers';
 import {Svg} from 'assets/svg';
 
-import {format} from 'date-fns';
 import {margin, padding} from 'theme/spacing';
 import {GlobalStyles} from 'theme/globalStyle';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -30,6 +29,8 @@ import {trigger} from 'react-native-haptic-feedback';
 import {fontNormalize} from 'utils';
 import CoachSelection from 'components/CoachSelection';
 import {useSelector} from 'store/reducers/rootReducers';
+import moment from 'moment';
+import 'moment/locale/es';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 
@@ -53,12 +54,16 @@ export const Header: FC<CalendarHeaderProps> = memo(
     }, [currentDate, fullDate]);
 
     function getMonthName(monthNumber: number) {
-      const date = new Date();
-      date.setMonth(monthNumber - 1);
-      return format(date, 'LLLL', {locale: createLocalWeek('es')});
+      const date = moment({
+        month: monthNumber === 0 ? 11 : monthNumber - 1,
+        day: 1,
+      });
+      return date.locale('es').format('MMMM');
     }
     const getYear = useMemo(() => {
-      return format(fullDate, 'yyyy', {locale: createLocalWeek('es')});
+      const date = moment(fullDate);
+
+      return date.locale('es').format('YYYY');
     }, [fullDate]);
 
     const progressValue = useSharedValue<number>(0);

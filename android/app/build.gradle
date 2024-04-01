@@ -93,8 +93,8 @@ android {
         applicationId "com.norbitapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 127
-        versionName "1.2.7"
+        versionCode 129
+        versionName "1.2.9"
     }
     splits {
         abi {
@@ -152,6 +152,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation("com.facebook.soloader:soloader:0.10.4+")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 

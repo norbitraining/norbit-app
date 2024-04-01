@@ -177,7 +177,7 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
                 margin.mt5,
               ]}>
               <TouchableOpacity
-                hitSlop={{top: 20, right: 10, left: 15, bottom: 5}}
+                hitSlop={{top: 20, right: 15, left: 20, bottom: 12}}
                 activeOpacity={0.8}
                 onPress={toggleAccordion}>
                 <View
@@ -234,11 +234,22 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
               )}
 
               {card.exerciseList.map((exercise, indexExercise) => {
+                // !MEJORAR CODIGO
+                const exerciseName =
+                  Array.isArray(exercise?.exercise?.personalizedExercise) &&
+                  exercise?.exercise?.personalizedExercise?.length > 0
+                    ? exercise?.exercise?.personalizedExercise[0].exercise_name
+                    : exercise?.exercise?.exerciseName;
+                const videoUrl =
+                  Array.isArray(exercise?.exercise?.personalizedExercise) &&
+                  exercise?.exercise?.personalizedExercise?.length > 0
+                    ? exercise?.exercise?.personalizedExercise[0].video_url
+                    : exercise?.exercise?.videoUrl;
                 return (
                   <ExerciseItem
                     key={String(indexExercise + planningId)}
-                    exerciseName={exercise?.exercise?.exerciseName || ''}
-                    videoUrl={exercise?.exercise?.videoUrl || ''}
+                    exerciseName={exerciseName || ''}
+                    videoUrl={videoUrl || ''}
                     rounds={exercise?.rounds || ''}
                     reps={exercise?.reps || ''}
                     weight={exercise?.weight || ''}

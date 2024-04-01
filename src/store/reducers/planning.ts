@@ -62,6 +62,7 @@ export interface Exercise {
   idExercise: number;
   exerciseName: string;
   videoUrl: string;
+  personalizedExercise?: {exercise_name: string; video_url: string}[] | null;
 }
 
 // Define a type for the slice state

@@ -11,11 +11,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        configurations.all {
-            resolutionStrategy {
-                force 'com.facebook.soloader:soloader:0.10.4+'
-            }
-	}
 	}
     dependencies {
         classpath("com.android.tools.build:gradle")

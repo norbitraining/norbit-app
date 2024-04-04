@@ -7,6 +7,7 @@ import {StyleSheet} from 'utils/stylesheet';
 export interface TextCustomProps {
   fontSize?: number;
   color?: typeof ColorPalette | string;
+  lineHeight?: number;
   weight?: TypeFontWeight;
   align?: 'auto' | 'left' | 'right' | 'center' | 'justify' | undefined;
   style?: StyleProp<TextStyle>;
@@ -20,11 +21,13 @@ const TextComponent: React.FC<React.PropsWithChildren<TextCustomProps>> = ({
   weight = 'Regular',
   align = 'left',
   numberOfLines,
+  lineHeight,
   style,
 }) => {
   const styles = StyleSheet.create({
     text: {
       fontSize: fontSize || 14,
+      lineHeight,
       color,
       textAlign: align,
       ...fontMaker({weight}),

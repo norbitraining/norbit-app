@@ -71,6 +71,7 @@ function BottomTabNavigator() {
         };
       }}
       initialRouteName={Screen.CALENDAR_STACK}
+      // eslint-disable-next-line react/no-unstable-nested-components
       tabBar={(props: any) => <TabBar {...props} isDark={isDark} />}>
       <Tab.Screen name={Screen.CALENDAR_STACK} component={CalendarStack} />
       <Tab.Screen name={Screen.SETTINGS_STACK} component={SettingsStack} />

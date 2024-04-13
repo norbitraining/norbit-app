@@ -75,7 +75,7 @@ export interface IPlanningReducer {
 // Define the initial state using that type
 const initialState: IPlanningReducer = {
   planningList: [],
-  isLoading: false,
+  isLoading: true,
   isLoadingRecord: false,
 };
 

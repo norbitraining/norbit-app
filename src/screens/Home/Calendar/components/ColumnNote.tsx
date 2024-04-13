@@ -32,176 +32,178 @@ import ContainerMessage from './ContainerMessage';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import useKeyboardHeight from 'hooks/useKeyboardHeight';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-interface ColumnNoteProps {
+interface ColumnNoteProps extends WithTranslation {
   column: PlanningColumn;
   planningId: number;
 }
 
-export default React.memo<ColumnNoteProps>(function ColumnNote({
-  column,
-  planningId,
-}) {
-  const dispatch = useDispatch();
-  const schema = useColorScheme();
-  const [keyboardHeight] = useKeyboardHeight();
+export default withTranslation()(
+  React.memo<ColumnNoteProps>(function ColumnNote({t, column, planningId}) {
+    const dispatch = useDispatch();
+    const schema = useColorScheme();
+    const [keyboardHeight] = useKeyboardHeight();
 
-  const isLoadingRecord = useSelector(x => x.planning.isLoadingRecord);
+    const isLoadingRecord = useSelector(x => x.planning.isLoadingRecord);
 
-  const handleRecordByPlanningColumn = React.useMemo(
-    () => getRecordByPlanningColumn(planningId, column.id),
-    [column.id, planningId],
-  );
-  const records = useSelector(handleRecordByPlanningColumn);
-  const record = React.useMemo(() => records?.[0] || null, [records]);
+    const handleRecordByPlanningColumn = React.useMemo(
+      () => getRecordByPlanningColumn(planningId, column.id),
+      [column.id, planningId],
+    );
+    const records = useSelector(handleRecordByPlanningColumn);
+    const record = React.useMemo(() => records?.[0] || null, [records]);
 
-  const animatedIndex = useSharedValue(0);
+    const animatedIndex = useSharedValue(0);
 
-  const sendingRequest = React.useRef<boolean>(false);
+    const sendingRequest = React.useRef<boolean>(false);
 
-  const isDark = React.useMemo(() => schema === 'dark', [schema]);
+    const isDark = React.useMemo(() => schema === 'dark', [schema]);
 
-  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
+    const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
-  const handleSaveNote = React.useCallback(
-    (value: string) => {
-      sendingRequest.current = true;
-      dispatch(
-        (record?.id
-          ? planningActions.updatePlanningColumnRecordAction
-          : planningActions.finishPlanningColumnAction)({
-          recordId: record?.id,
-          planningId,
-          planningColumnId: column.id,
-          note: value,
-        }),
-      );
-    },
-    [column.id, dispatch, planningId, record],
-  );
+    const handleSaveNote = React.useCallback(
+      (value: string) => {
+        sendingRequest.current = true;
+        dispatch(
+          (record?.id
+            ? planningActions.updatePlanningColumnRecordAction
+            : planningActions.finishPlanningColumnAction)({
+            recordId: record?.id,
+            planningId,
+            planningColumnId: column.id,
+            note: value,
+          }),
+        );
+      },
+      [column.id, dispatch, planningId, record],
+    );
 
-  const handleOpenModal = () => {
-    animatedIndex.value = withTiming(0);
-    bottomSheetModalRef.current?.present();
-  };
+    const handleOpenModal = () => {
+      animatedIndex.value = withTiming(0);
+      bottomSheetModalRef.current?.present();
+    };
 
-  const handleCloseModal = () => {
-    bottomSheetModalRef.current?.close();
-  };
+    const handleCloseModal = () => {
+      bottomSheetModalRef.current?.close();
+    };
 
-  const handleOnDismiss = () => {
-    Keyboard.dismiss();
-  };
+    const handleOnDismiss = () => {
+      Keyboard.dismiss();
+    };
 
-  const handleBlur = () => {
-    handleCloseModal();
-  };
-  const onPressBackdrop = React.useCallback(() => {
-    animatedIndex.value = withTiming(-1);
-    handleOnDismiss();
-  }, [animatedIndex]);
+    const handleBlur = () => {
+      handleCloseModal();
+    };
+    const onPressBackdrop = React.useCallback(() => {
+      animatedIndex.value = withTiming(-1);
+      handleOnDismiss();
+    }, [animatedIndex]);
 
-  React.useEffect(() => {
-    if (isLoadingRecord || !sendingRequest.current) {
-      return;
-    }
-    onPressBackdrop();
-    handleCloseModal();
-    sendingRequest.current = false;
-  }, [onPressBackdrop, isLoadingRecord]);
+    React.useEffect(() => {
+      if (isLoadingRecord || !sendingRequest.current) {
+        return;
+      }
+      onPressBackdrop();
+      handleCloseModal();
+      sendingRequest.current = false;
+    }, [onPressBackdrop, isLoadingRecord]);
 
-  const renderBackdrop = React.useCallback(
-    (propsBd: any) => (
-      <BottomSheetBackdrop
-        {...propsBd}
-        animatedIndex={animatedIndex}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        onPress={onPressBackdrop}
-      />
-    ),
-    [animatedIndex, onPressBackdrop],
-  );
-  return (
-    <>
-      <View style={[GlobalStyles.row, margin.mt10]}>
-        {record?.note ? (
-          <ContainerMessage
-            label="Mi nota"
-            value={record?.note || ''}
-            onPressEdit={handleOpenModal}
-          />
-        ) : (
-          <TouchableOpacity
-            onPress={handleOpenModal}
-            style={styles.buttonAddNote}
-            activeOpacity={0.7}>
-            <Icon
-              name="edit"
-              size={18}
-              style={margin.mr10}
-              color={
-                schema === 'dark'
-                  ? 'white'
-                  : EStyleSheet.value('$colors_primary')
-              }
+    const renderBackdrop = React.useCallback(
+      (propsBd: any) => (
+        <BottomSheetBackdrop
+          {...propsBd}
+          animatedIndex={animatedIndex}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          onPress={onPressBackdrop}
+        />
+      ),
+      [animatedIndex, onPressBackdrop],
+    );
+    return (
+      <>
+        <View style={[GlobalStyles.row, margin.mt10]}>
+          {record?.note ? (
+            <ContainerMessage
+              label={t('common.myNote')}
+              value={record?.note || ''}
+              onPressEdit={handleOpenModal}
             />
-            <View>
-              <Text
-                fontSize={fontNormalize(16)}
+          ) : (
+            <TouchableOpacity
+              onPress={handleOpenModal}
+              style={styles.buttonAddNote}
+              activeOpacity={0.7}>
+              <Icon
+                name="edit"
+                size={18}
+                style={margin.mr10}
                 color={
                   schema === 'dark'
                     ? 'white'
                     : EStyleSheet.value('$colors_primary')
-                }>
-                Agregar nota
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        backdropComponent={renderBackdrop}
-        handleIndicatorStyle={styles.handleIndicatorStyle}
-        animateOnMount
-        enableDynamicSizing
-        enablePanDownToClose
-        contentHeight={keyboardHeight}
-        handleStyle={styles.handleStyle}
-        onDismiss={handleOnDismiss}
-        backgroundStyle={
-          isDark ? styles.bottomSheetContainerDark : styles.bottomSheetContainer
-        }>
-        <BottomSheetView>
-          <View style={styles.contentContainer}>
-            <View style={GlobalStyles.row}>
-              <Text
-                fontSize={fontNormalize(20)}
-                weight="Medium"
-                color={schema === 'dark' ? 'white' : 'black'}>
-                {record?.note ? 'Editar nota' : 'Agregar nota'}
-              </Text>
+                }
+              />
+              <View>
+                <Text
+                  fontSize={fontNormalize(16)}
+                  color={
+                    schema === 'dark'
+                      ? 'white'
+                      : EStyleSheet.value('$colors_primary')
+                  }>
+                  {t('button.addNote')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          backdropComponent={renderBackdrop}
+          handleIndicatorStyle={styles.handleIndicatorStyle}
+          animateOnMount
+          enableDynamicSizing
+          enablePanDownToClose
+          contentHeight={keyboardHeight}
+          handleStyle={styles.handleStyle}
+          onDismiss={handleOnDismiss}
+          backgroundStyle={
+            isDark
+              ? styles.bottomSheetContainerDark
+              : styles.bottomSheetContainer
+          }>
+          <BottomSheetView>
+            <View style={styles.contentContainer}>
+              <View style={GlobalStyles.row}>
+                <Text
+                  fontSize={fontNormalize(20)}
+                  weight="Medium"
+                  color={schema === 'dark' ? 'white' : 'black'}>
+                  {record?.note ? t('button.editNote') : t('button.addNote')}
+                </Text>
 
-              <Icon
-                name="edit-2"
-                size={18}
-                style={margin.ml12}
-                color={schema === 'dark' ? 'white' : 'black'}
+                <Icon
+                  name="edit-2"
+                  size={18}
+                  style={margin.ml12}
+                  color={schema === 'dark' ? 'white' : 'black'}
+                />
+              </View>
+
+              <FormComponent
+                defaultValue={record?.note || ''}
+                onBlur={handleBlur}
+                onSave={handleSaveNote}
               />
             </View>
-
-            <FormComponent
-              defaultValue={record?.note || ''}
-              onBlur={handleBlur}
-              onSave={handleSaveNote}
-            />
-          </View>
-        </BottomSheetView>
-      </BottomSheetModal>
-    </>
-  );
-});
+          </BottomSheetView>
+        </BottomSheetModal>
+      </>
+    );
+  }),
+);
 
 const FormComponent: React.FC<{
   onBlur: () => void;

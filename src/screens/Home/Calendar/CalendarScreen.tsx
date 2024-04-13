@@ -187,7 +187,6 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({getPlanningAction}) => {
           date={date}
           onChangePlanningFilter={onChangePlanningFilter}
           onPressDate={pressDate}
-          language="es"
         />
       </Animated.View>
       {currentPlanning.isLoading && (

@@ -2,6 +2,9 @@ import {Dimensions, PixelRatio, Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {LabelError} from './text';
 import {PlanningActivityType} from 'store/reducers/planning';
+import {useCallback} from 'react';
+
+import i18 from 'i18next';
 
 export const isAndroid = Platform.OS === 'android';
 
@@ -84,7 +87,7 @@ export const normalizeCatchActions = (codeError?: keyof typeof LabelError) => {
   const translateError = LabelError[codeError || 'generic'];
   Toast.show({
     type: 'error',
-    text1: translateError,
+    text1: i18.t(`errors.${translateError}`) as string,
   });
 };
 
@@ -105,7 +108,9 @@ export const getLabelActivityType = (
     return 'Amrap';
   }
   if (activityType === 'round' && rounds) {
-    return rounds.length > 1 || Number(rounds) > 1 ? ' Rondas' : ' Ronda';
+    return rounds.length > 1 || Number(rounds) > 1
+      ? 'common.rounds'
+      : 'common.round';
   }
   if (activityType === 'tabata') {
     return 'Tabata';
@@ -121,3 +126,25 @@ export function isDate(dateString: string): boolean {
     date.toString() !== 'Invalid Date'
   );
 }
+
+type RefType<T> = React.MutableRefObject<T> | React.RefCallback<T> | null;
+
+export const useSharedRef = <T>(
+  refA: RefType<T>,
+  refB: RefType<T>,
+): React.RefCallback<T> =>
+  useCallback(
+    (instance: T) => {
+      if (typeof refA === 'function') {
+        refA(instance);
+      } else if (refA) {
+        refA.current = instance;
+      }
+      if (typeof refB === 'function') {
+        refB(instance);
+      } else if (refB) {
+        refB.current = instance;
+      }
+    },
+    [refA, refB],
+  );

@@ -17,21 +17,25 @@ import {useSelector} from 'store/reducers/rootReducers';
 import Text from 'components/Text';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import useKeyboardHeight from 'hooks/useKeyboardHeight';
-import {Label} from 'utils/text';
 import {ICoachesRequest, coachesActions} from 'store/reducers/coaches';
 import Separator from 'components/Separator';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {trigger} from 'react-native-haptic-feedback';
 import {planningActions} from 'store/reducers/planning';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-interface BottomSheetCoachListProps {
+interface BottomSheetCoachListProps extends WithTranslation {
   openModal: boolean;
   onCloseModal: () => void;
 }
 
-export default React.memo<BottomSheetCoachListProps>(
-  function BottomSheetCoachList({openModal, onCloseModal}) {
+export default withTranslation()(
+  React.memo<BottomSheetCoachListProps>(function BottomSheetCoachList({
+    t,
+    openModal,
+    onCloseModal,
+  }) {
     const dispatch = useDispatch();
     const schema = useColorScheme();
     const [keyboardHeight] = useKeyboardHeight();
@@ -180,7 +184,7 @@ export default React.memo<BottomSheetCoachListProps>(
                   fontSize={fontNormalize(20)}
                   weight="Medium"
                   color={schema === 'dark' ? 'white' : 'black'}>
-                  {Label.coaches}
+                  {t('common.coaches')}
                 </Text>
               </View>
               <Separator thickness={12} />
@@ -192,7 +196,7 @@ export default React.memo<BottomSheetCoachListProps>(
         </BottomSheetModal>
       </>
     );
-  },
+  }),
 );
 
 const itemCoachDefault = {

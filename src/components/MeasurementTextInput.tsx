@@ -21,6 +21,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import PickerModal from '@freakycoder/react-native-picker-modal';
 
 import Text, {TextCustomProps} from 'components/Text';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 export type InputTheme = 'light' | 'dark';
 
@@ -31,7 +32,7 @@ const weightList = ['lb', 'kg'];
 
 const HIT_SLOP = {left: 25, right: 20, bottom: 30, top: 30};
 
-export interface MeasurementTextInputProps {
+export interface MeasurementTextInputProps extends WithTranslation {
   onChangeMeasurement?: (
     measurementValue: IUserRequest['weight_measurement'] &
       IUserRequest['height_measurement'],
@@ -50,7 +51,7 @@ export interface MeasurementTextInputProps {
   error?: any;
 }
 
-const defaultProps: MeasurementTextInputProps = {
+const defaultProps: any = {
   iconProps: {name: ''},
   textInputProps: {},
   measurementType: 'weight',
@@ -59,6 +60,7 @@ const defaultProps: MeasurementTextInputProps = {
 };
 
 const MeasurementTextInput: React.FC<MeasurementTextInputProps> = ({
+  t,
   onChangeMeasurement,
   textInputProps,
   labelProps,
@@ -149,7 +151,7 @@ const MeasurementTextInput: React.FC<MeasurementTextInputProps> = ({
         </View>
       )}
       <PickerModal
-        title="Selecciona un tipo de medida"
+        title={t('common.selectMeasurement')}
         isVisible={showModal}
         data={measurementType === 'height' ? heightList : weightList}
         onPress={onPressItemSelection}
@@ -160,7 +162,9 @@ const MeasurementTextInput: React.FC<MeasurementTextInputProps> = ({
   );
 };
 
-export default withDefaults(MeasurementTextInput, defaultProps);
+export default withTranslation()(
+  withDefaults(MeasurementTextInput, defaultProps),
+);
 
 const inputStyle = {
   height: rHeight(40),

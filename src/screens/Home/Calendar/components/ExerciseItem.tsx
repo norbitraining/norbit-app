@@ -24,8 +24,9 @@ import {trigger} from 'react-native-haptic-feedback';
 import {Svg} from 'assets/svg';
 import {StyleSheet, fontNormalize, isAndroid, rHeight, rWidth} from 'utils';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-type ExerciseItemProps = {
+interface ExerciseItemProps extends WithTranslation {
   exerciseName: string;
   rounds?: string;
   reps?: string;
@@ -33,7 +34,7 @@ type ExerciseItemProps = {
   time?: string;
   weight?: string;
   videoUrl?: string;
-};
+}
 
 interface Field {
   label: string;
@@ -41,232 +42,241 @@ interface Field {
   percentage?: string;
 }
 
-const ExerciseItem: React.FC<ExerciseItemProps> = React.memo(
-  ({exerciseName, rounds, reps, distance, time, weight, videoUrl}) => {
-    const scheme = useColorScheme();
-    const isDark = useMemo(() => scheme === 'dark', [scheme]);
+const ExerciseItemComponent: React.FC<ExerciseItemProps> = ({
+  t,
+  exerciseName,
+  rounds,
+  reps,
+  distance,
+  time,
+  weight,
+  videoUrl,
+}) => {
+  const scheme = useColorScheme();
+  const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
-    const fields = React.useMemo((): Field[] => {
-      return [
-        ...(rounds
-          ? [
-              {
-                label: `${rounds} ${
-                  Number(rounds) >= 0
-                    ? Number(rounds) > 1
-                      ? 'Rondas'
-                      : 'Ronda'
-                    : ''
-                }`,
-              },
-            ]
-          : []),
-        ...(distance
-          ? [
-              {
-                label: `${distance}`,
-              },
-            ]
-          : []),
-        ...(time
-          ? [
-              {
-                label: `${time}`,
-              },
-            ]
-          : []),
-        ...(reps
-          ? [
-              {
-                label: `${reps} ${
-                  Number(reps) >= 0 || reps.includes('/') || reps.includes('-')
-                    ? 'Reps'
-                    : ''
-                }`,
-              },
-            ]
-          : []),
-        ...(weight
-          ? [
-              {
-                label: `${weight}`,
-                isWeight: true,
-              },
-            ]
-          : []),
-      ];
-    }, [distance, reps, rounds, time, weight]);
+  const fields = React.useMemo((): Field[] => {
+    return [
+      ...(rounds
+        ? [
+            {
+              label: `${rounds} ${
+                Number(rounds) >= 0
+                  ? Number(rounds) > 1
+                    ? t('common.rounds')
+                    : t('common.round')
+                  : ''
+              }`,
+            },
+          ]
+        : []),
+      ...(distance
+        ? [
+            {
+              label: `${distance}`,
+            },
+          ]
+        : []),
+      ...(time
+        ? [
+            {
+              label: `${time}`,
+            },
+          ]
+        : []),
+      ...(reps
+        ? [
+            {
+              label: `${reps} ${
+                Number(reps) >= 0 || reps.includes('/') || reps.includes('-')
+                  ? 'Reps'
+                  : ''
+              }`,
+            },
+          ]
+        : []),
+      ...(weight
+        ? [
+            {
+              label: `${weight}`,
+              isWeight: true,
+            },
+          ]
+        : []),
+    ];
+  }, [distance, reps, rounds, t, time, weight]);
 
-    const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
-    const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-    const height = useSharedValue<number>(0);
-    const iconRotate = useSharedValue<number>(0);
+  const height = useSharedValue<number>(0);
+  const iconRotate = useSharedValue<number>(0);
 
-    const timeOutVideoRef = useRef<number | any>();
+  const timeOutVideoRef = useRef<number | any>();
 
-    const toggleVideo = useCallback(() => {
-      trigger('impactLight', {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
-
-      unstable_batchedUpdates(() => {
-        if (expanded) {
-          setPlaying(false);
-          height.value = withTiming(0);
-          iconRotate.value = withTiming(0);
-        } else {
-          timeOutVideoRef.current && clearTimeout(timeOutVideoRef.current);
-          timeOutVideoRef.current = setTimeout(() => {
-            setPlaying(true);
-          }, 500);
-          height.value = withTiming(rHeight(isAndroid ? 145 : 150));
-          iconRotate.value = withTiming(1);
-        }
-        setExpanded(!expanded);
-      });
-    }, [expanded, height, iconRotate]);
-
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        height: height.value,
-        opacity: withTiming(expanded ? 1 : 0),
-        width: '100%',
-        paddingHorizontal: 3,
-        zIndex: -1,
-      };
-    });
-    const animatedArrowStyle = useAnimatedStyle(() => {
-      return {
-        transform: [
-          {
-            rotateX: `${interpolate(
-              iconRotate.value,
-              [0, 1],
-              [0, 180],
-              Extrapolate.CLAMP,
-            )}deg`,
-          },
-        ],
-      };
+  const toggleVideo = useCallback(() => {
+    trigger('impactLight', {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
     });
 
-    const renderField = useCallback(
-      (field: Field, index: number) => {
-        return (
-          <View
-            key={index}
-            style={[
-              styles.containerDetailExercise,
-              GlobalStyles.center,
-              GlobalStyles.row,
-              isDark && styles.containerDetailExerciseDark,
-              margin.mt5,
-              {maxWidth: field.percentage},
-            ]}>
-            {field.isWeight && <Svg.WeightSvg style={margin.mr5} />}
+    unstable_batchedUpdates(() => {
+      if (expanded) {
+        setPlaying(false);
+        height.value = withTiming(0);
+        iconRotate.value = withTiming(0);
+      } else {
+        timeOutVideoRef.current && clearTimeout(timeOutVideoRef.current);
+        timeOutVideoRef.current = setTimeout(() => {
+          setPlaying(true);
+        }, 500);
+        height.value = withTiming(rHeight(isAndroid ? 145 : 150));
+        iconRotate.value = withTiming(1);
+      }
+      setExpanded(!expanded);
+    });
+  }, [expanded, height, iconRotate]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: height.value,
+      opacity: withTiming(expanded ? 1 : 0),
+      width: '100%',
+      paddingHorizontal: 3,
+      zIndex: -1,
+    };
+  });
+  const animatedArrowStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          rotateX: `${interpolate(
+            iconRotate.value,
+            [0, 1],
+            [0, 180],
+            Extrapolate.CLAMP,
+          )}deg`,
+        },
+      ],
+    };
+  });
+
+  const renderField = useCallback(
+    (field: Field, index: number) => {
+      return (
+        <View
+          key={index}
+          style={[
+            styles.containerDetailExercise,
+            GlobalStyles.center,
+            GlobalStyles.row,
+            isDark && styles.containerDetailExerciseDark,
+            margin.mt5,
+            {maxWidth: field.percentage},
+          ]}>
+          {field.isWeight && <Svg.WeightSvg style={margin.mr5} />}
+          <Text
+            fontSize={fontNormalize(14)}
+            weight="Light"
+            color={isDark ? 'white' : 'black'}>
+            {field.label}
+          </Text>
+        </View>
+      );
+    },
+    [isDark],
+  );
+
+  const onStateChange = useCallback((state: any) => {
+    if (state === 'ended') {
+      setPlaying(false);
+    }
+  }, []);
+
+  return (
+    <View
+      style={[
+        styles.container,
+        isDark && styles.containerDark,
+        styles.containerMin,
+        (!videoUrl || !weight || !rounds || !reps) && [GlobalStyles.center],
+      ]}
+      needsOffscreenAlphaCompositing>
+      <View style={[GlobalStyles.rowSb, padding.ph12, padding.pv10]}>
+        <View style={[styles.contentTitleExercise, GlobalStyles.row]}>
+          {!videoUrl && (
             <Text
               fontSize={fontNormalize(14)}
-              weight="Light"
-              color={isDark ? 'white' : 'black'}>
-              {field.label}
+              color={isDark ? 'white' : 'black'}
+              weight="Medium">
+              {exerciseName}
             </Text>
-          </View>
-        );
-      },
-      [isDark],
-    );
+          )}
 
-    const onStateChange = useCallback((state: any) => {
-      if (state === 'ended') {
-        setPlaying(false);
-      }
-    }, []);
-
-    return (
-      <View
-        style={[
-          styles.container,
-          isDark && styles.containerDark,
-          styles.containerMin,
-          (!videoUrl || !weight || !rounds || !reps) && [GlobalStyles.center],
-        ]}
-        needsOffscreenAlphaCompositing>
-        <View style={[GlobalStyles.rowSb, padding.ph12, padding.pv10]}>
-          <View style={[styles.contentTitleExercise, GlobalStyles.row]}>
-            {!videoUrl && (
-              <Text
-                fontSize={fontNormalize(14)}
-                color={isDark ? 'white' : 'black'}
-                weight="Medium">
-                {exerciseName}
-              </Text>
-            )}
-
-            {!!videoUrl && (
-              <View style={styles.contentButtonVideo}>
-                <TouchableOpacity
-                  style={GlobalStyles.center}
-                  hitSlop={{top: 20, right: 20, left: 15, bottom: 5}}
-                  activeOpacity={0.9}
-                  onPress={toggleVideo}>
-                  <View style={GlobalStyles.row}>
-                    <View style={GlobalStyles.center}>
-                      <Svg.VideoSvg width={fontNormalize(18)} />
-                      <Animated.View style={animatedArrowStyle}>
-                        <Icon
-                          name={'chevron-down'}
-                          size={fontNormalize(13)}
-                          color={EStyleSheet.value('$colors_danger')}
-                        />
-                      </Animated.View>
-                    </View>
-                    <Text
-                      fontSize={fontNormalize(14)}
-                      weight="Medium"
-                      color={isDark ? 'white' : 'black'}
-                      style={styles.minWidthExerciseName}>
-                      {exerciseName}
-                    </Text>
+          {!!videoUrl && (
+            <View style={styles.contentButtonVideo}>
+              <TouchableOpacity
+                style={GlobalStyles.center}
+                hitSlop={{top: 20, right: 20, left: 15, bottom: 5}}
+                activeOpacity={0.9}
+                onPress={toggleVideo}>
+                <View style={GlobalStyles.row}>
+                  <View style={GlobalStyles.center}>
+                    <Svg.VideoSvg width={fontNormalize(18)} />
+                    <Animated.View style={animatedArrowStyle}>
+                      <Icon
+                        name={'chevron-down'}
+                        size={fontNormalize(13)}
+                        color={EStyleSheet.value('$colors_danger')}
+                      />
+                    </Animated.View>
                   </View>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-
-          <View style={styles.containerFields}>{fields.map(renderField)}</View>
+                  <Text
+                    fontSize={fontNormalize(14)}
+                    weight="Medium"
+                    color={isDark ? 'white' : 'black'}
+                    style={styles.minWidthExerciseName}>
+                    {exerciseName}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-        {!!videoUrl && (
-          <Animated.View style={animatedStyle}>
-            {expanded && (
-              <Animated.View
-                style={styles.contentVideo}
-                entering={FadeIn.springify()}
-                exiting={FadeOut.springify()}>
-                <YoutubePlayer
-                  height={'100%' as any}
-                  width={'100%' as any}
-                  forceAndroidAutoplay={isAndroid}
-                  webViewStyle={styles.webView}
-                  webViewProps={{
-                    startInLoadingState: true,
-                    shouldRasterizeIOS: true,
-                  }}
-                  play={playing}
-                  contentScale={0.75}
-                  videoId={videoUrl}
-                  onChangeState={onStateChange}
-                />
-              </Animated.View>
-            )}
-          </Animated.View>
-        )}
+
+        <View style={styles.containerFields}>{fields.map(renderField)}</View>
       </View>
-    );
-  },
-);
+      {!!videoUrl && (
+        <Animated.View style={animatedStyle}>
+          {expanded && (
+            <Animated.View
+              style={styles.contentVideo}
+              entering={FadeIn.springify()}
+              exiting={FadeOut.springify()}>
+              <YoutubePlayer
+                height={'100%' as any}
+                width={'100%' as any}
+                forceAndroidAutoplay={isAndroid}
+                webViewStyle={styles.webView}
+                webViewProps={{
+                  startInLoadingState: true,
+                  shouldRasterizeIOS: true,
+                }}
+                play={playing}
+                contentScale={0.75}
+                videoId={videoUrl}
+                onChangeState={onStateChange}
+              />
+            </Animated.View>
+          )}
+        </Animated.View>
+      )}
+    </View>
+  );
+};
+
+const ExerciseItem = withTranslation()(React.memo(ExerciseItemComponent));
 
 const styles = StyleSheet.create({
   alignItemsStart: {alignSelf: 'flex-start'},

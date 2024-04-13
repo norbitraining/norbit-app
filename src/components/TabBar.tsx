@@ -10,8 +10,9 @@ import {Screen} from 'utils/constants/screens';
 import Text from './Text';
 import Icon from 'react-native-vector-icons/Feather';
 import Separator from './Separator';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-interface TabBarProps extends BottomTabBarProps {
+interface TabBarProps extends WithTranslation, BottomTabBarProps {
   isDark: boolean;
 }
 
@@ -24,23 +25,26 @@ type IconTab = {
   [value in Screen]?: ItemTab;
 };
 
-const itemTabs: IconTab = {
-  CalendarStack: {
-    label: 'Calendario',
-    icon: 'calendar',
-  },
-  SettingsStack: {
-    label: 'Configuración',
-    icon: 'settings',
-  },
-};
-
 const TabBar: React.FC<TabBarProps> = ({
+  t,
   navigation,
   state,
   descriptors,
   isDark,
 }) => {
+  const itemTabs: IconTab = React.useMemo(
+    () => ({
+      CalendarStack: {
+        label: t('tabs.calendar'),
+        icon: 'calendar',
+      },
+      SettingsStack: {
+        label: t('tabs.settings'),
+        icon: 'settings',
+      },
+    }),
+    [t],
+  );
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
@@ -145,7 +149,7 @@ const TabBar: React.FC<TabBarProps> = ({
   );
 };
 
-export default TabBar;
+export default withTranslation()(TabBar);
 const styles = StyleSheet.create({
   containerTabDarkCalendar: {
     left: 0,

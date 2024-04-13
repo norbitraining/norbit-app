@@ -9,7 +9,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Header from 'components/Header';
 import {IUserRequest, userActions} from 'store/reducers/user';
 import Separator from 'components/Separator';
-import {ButtonText, HeaderText, Input, ValidationText} from 'utils/text';
 import {Controller, useForm} from 'react-hook-form';
 import TextInput from 'components/TextInput';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -20,14 +19,15 @@ import Button from 'components/Button';
 import MeasurementTextInput from 'components/MeasurementTextInput';
 import Picker from 'components/Picker';
 import DatePicker from 'components/DatePicker';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-interface ProfileScreenProps {
+interface ProfileScreenProps extends WithTranslation {
   updateProfileAction: typeof userActions.updateProfileAction;
 }
 
 const schema = yup
   .object({
-    first_name: yup.string().required(ValidationText),
+    first_name: yup.string().required(),
     last_name: yup.string().required(),
     email: yup.string().email(),
     birthday: yup.string().required(),
@@ -39,7 +39,10 @@ const schema = yup
   })
   .required();
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  t,
+  updateProfileAction,
+}) => {
   const scheme = useColorScheme();
 
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
@@ -63,17 +66,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     values: {
-      first_name: currentUser.user?.first_name,
-      last_name: currentUser.user?.last_name,
+      first_name: currentUser.user?.first_name || '',
+      last_name: currentUser.user?.last_name || '',
       birthday: currentUser.user?.birthday
         ? moment(currentUser.user?.birthday, 'YYYY-MM-DD').format('DD/MM/YYYY')
         : '',
       email: currentUser.user?.email,
       gender: currentUser.user?.gender ? 'M' : 'F',
-      weight: currentUser.user?.weight,
-      height: currentUser.user?.height,
-      weight_measurement: currentUser.user?.weight_measurement,
-      height_measurement: currentUser.user?.height_measurement,
+      weight: currentUser.user?.weight || '',
+      height: currentUser.user?.height || '',
+      weight_measurement: currentUser.user?.weight_measurement || '',
+      height_measurement: currentUser.user?.height_measurement || '',
     },
     defaultValues: {},
   });
@@ -81,14 +84,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
   const onChangeHeightMeasurement = (
     value: IUserRequest['height_measurement'],
   ) => {
-    setValue('height_measurement', value, {shouldDirty: true});
+    setValue('height_measurement', value || '', {shouldDirty: true});
     setHeightMeasurement(value);
   };
 
   const onChangeWeightMeasurement = (
     value: IUserRequest['weight_measurement'],
   ) => {
-    setValue('weight_measurement', value, {shouldDirty: true});
+    setValue('weight_measurement', value || '', {shouldDirty: true});
     setWeightMeasurement(value);
   };
 
@@ -99,7 +102,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
       ...values,
       gender: values.gender === 'M' ? 1 : 0,
       birthday: moment(values.birthday, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-    });
+    } as any);
   };
 
   return (
@@ -108,7 +111,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
         scheme === 'dark' ? GlobalStyles.container : GlobalStyles.containerWhite
       }>
       <Header
-        text={HeaderText.editProfile}
+        text={t('header.editProfile') as string}
         showBackButton={true}
         textColor={EStyleSheet.value(
           isDark ? '$colors_white' : '$colors_black',
@@ -125,7 +128,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <TextInput
-                  label={Input.firstName}
+                  label={t('input.firstName') as string}
                   theme={isDark ? 'dark' : 'light'}
                   textInputProps={{
                     onBlur: onBlur,
@@ -145,7 +148,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <TextInput
-                  label={Input.lastName}
+                  label={t('input.lastName') as string}
                   theme={isDark ? 'dark' : 'light'}
                   textInputProps={{
                     onBlur: onBlur,
@@ -166,7 +169,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
           control={control}
           render={({field: {onChange, onBlur, value}}) => (
             <TextInput
-              label={Input.email}
+              label={t('input.email') as string}
               theme={isDark ? 'dark' : 'light'}
               textInputProps={{
                 onBlur: onBlur,
@@ -188,7 +191,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, value}}) => (
                 <DatePicker
-                  label={Input.birthday}
+                  label={t('input.birthday') as string}
                   theme={isDark ? 'dark' : 'light'}
                   onChangeDate={onChange}
                   value={value}
@@ -204,7 +207,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, value}}) => (
                 <Picker
-                  label={Input.gender}
+                  label={t('input.gender') as string}
                   theme={isDark ? 'dark' : 'light'}
                   typeList="gender"
                   onChangeSelection={onChange}
@@ -224,7 +227,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <MeasurementTextInput
-                  label={Input.height}
+                  label={t('input.height') as string}
                   theme={isDark ? 'dark' : 'light'}
                   measurementType="height"
                   measurementValue={heightMeasurement}
@@ -247,7 +250,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <MeasurementTextInput
-                  label={Input.weight}
+                  label={t('input.weight') as string}
                   theme={isDark ? 'dark' : 'light'}
                   measurementType="weight"
                   measurementValue={weightMeasurement}
@@ -271,7 +274,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
       <View style={padding.ph15}>
         <Button
           isLoading={currentUser.isLoading}
-          text={ButtonText.saveChanges}
+          text={t('button.saveChanges') as string}
           theme={scheme || 'light'}
           onPress={handleSubmit(onSubmit)}
           colorText={EStyleSheet.value('$colors_white')}
@@ -285,4 +288,4 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({updateProfileAction}) => {
   );
 };
 
-export default ProfileScreen;
+export default withTranslation()(ProfileScreen);

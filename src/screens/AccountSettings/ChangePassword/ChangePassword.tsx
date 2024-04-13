@@ -12,13 +12,6 @@ import {yupResolver} from '@hookform/resolvers/yup';
 
 import {GlobalStyles} from 'theme/globalStyle';
 import {isAndroid, rHeight, rWidth, StyleSheet} from 'utils';
-import {
-  ButtonText,
-  HeaderText,
-  Input,
-  TextRules,
-  ValidationText,
-} from 'utils/text';
 import {padding} from 'theme/spacing';
 import {userActions} from 'store/reducers/user';
 import {useSelector} from 'store/reducers/rootReducers';
@@ -30,10 +23,11 @@ import TextInput from 'components/TextInput';
 import Text from 'components/Text';
 import Button from 'components/Button';
 import Header from 'components/Header';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const BEHAVIOR = isAndroid ? undefined : 'padding';
 
-interface ChangePasswordScreenProps {
+interface ChangePasswordScreenProps extends WithTranslation {
   changePasswordSettingsAction: typeof userActions.changePasswordSettingsAction;
 }
 
@@ -44,45 +38,29 @@ interface TextRule {
 
 const textRuleList: TextRule[] = [
   {
-    label: TextRules.required,
+    label: 'rules.required',
     regex: /\S/,
   },
   {
-    label: TextRules.minCharacter,
+    label: 'rules.minCharacter',
     regex: /.{8,}$/,
   },
   {
-    label: TextRules.latterUppercase,
+    label: 'rules.latterUppercase',
     regex: /[A-Z]/,
   },
   {
-    label: TextRules.latterLowercase,
+    label: 'rules.latterLowercase',
     regex: /[a-z]/,
   },
   {
-    label: TextRules.specialCharacter,
+    label: 'rules.specialCharacter',
     regex: /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/,
   },
 ];
 
-const schema = yup
-  .object({
-    currentPassword: yup.string().required(ValidationText.passwordRequired),
-    newPassword: yup
-      .string()
-      .required(ValidationText.passwordRequired)
-      .min(8)
-      .matches(/[A-Z]/)
-      .matches(/[a-z]/)
-      .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/),
-    confirmNewPassword: yup
-      .string()
-      .required(ValidationText.verifyPasswordRequired)
-      .oneOf([yup.ref('newPassword')], ValidationText.verifyPasswordNotEqual),
-  })
-  .required();
-
 const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
+  t,
   changePasswordSettingsAction,
 }) => {
   const scheme = useColorScheme();
@@ -92,6 +70,32 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
   const containerStyle = [
     isDark ? GlobalStyles.container : GlobalStyles.containerWhite,
   ];
+
+  const schema = React.useMemo(
+    () =>
+      yup
+        .object({
+          currentPassword: yup
+            .string()
+            .required(t('validations.passwordRequired') as string),
+          newPassword: yup
+            .string()
+            .required(t('validations.passwordRequired') as string)
+            .min(8)
+            .matches(/[A-Z]/)
+            .matches(/[a-z]/)
+            .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/),
+          confirmNewPassword: yup
+            .string()
+            .required(t('validations.verifyPasswordRequired') as string)
+            .oneOf(
+              [yup.ref('newPassword')],
+              t('validations.verifyPasswordNotEqual') as string,
+            ),
+        })
+        .required(),
+    [t],
+  );
 
   const currentUser = useSelector(state => state.user);
   const {
@@ -142,18 +146,18 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
             align="left"
             color={isDark ? 'white' : 'black'}
             style={styles.textRules}>
-            {rule.label}
+            {t(rule.label)}
           </Text>
         </View>
       );
     },
-    [getValues, isDark, isSubmitted],
+    [getValues, isDark, isSubmitted, t],
   );
 
   return (
     <View style={containerStyle}>
       <Header
-        text={HeaderText.changePassword}
+        text={t('header.changePassword') as string}
         showBackButton
         textColor={EStyleSheet.value(
           isDark ? '$colors_white' : '$colors_black',
@@ -177,7 +181,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                   control={control}
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextInput
-                      label={Input.currentPassword}
+                      label={t('input.currentPassword') as string}
                       theme={scheme || 'light'}
                       textInputProps={{
                         onBlur: onBlur,
@@ -198,7 +202,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                   control={control}
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextInput
-                      label={Input.newPassword}
+                      label={t('input.newPassword') as string}
                       theme={scheme || 'light'}
                       textInputProps={{
                         onBlur: onBlur,
@@ -218,7 +222,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                   control={control}
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextInput
-                      label={Input.confirmNewPassword}
+                      label={t('input.confirmNewPassword') as string}
                       theme={scheme || 'light'}
                       textInputProps={{
                         onBlur: onBlur,
@@ -245,7 +249,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
 
           <View style={styles.contentButton}>
             <Button
-              text={ButtonText.changePassword}
+              text={t('button.changePassword') as string}
               onPress={handleSubmit(onSubmit)}
               textProps={{
                 fontSize: rHeight(14),
@@ -265,7 +269,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
   );
 };
 
-export default ChangePasswordScreen;
+export default withTranslation()(ChangePasswordScreen);
 
 const styles = StyleSheet.create({
   logo: {width: rWidth(200), height: rWidth(50)},

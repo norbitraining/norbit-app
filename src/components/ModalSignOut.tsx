@@ -10,13 +10,15 @@ import {GlobalStyles} from 'theme/globalStyle';
 import Separator from './Separator';
 import {useDispatch} from 'react-redux';
 import {userActions} from 'store/reducers/user';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-export interface ModalSignOutProps {
+export interface ModalSignOutProps extends WithTranslation {
   visible: boolean;
   onCloseModal?: () => void;
 }
 
 const ModalSignOut: React.FC<ModalSignOutProps> = ({
+  t,
   visible,
   onCloseModal,
 }): React.ReactElement => {
@@ -46,17 +48,17 @@ const ModalSignOut: React.FC<ModalSignOutProps> = ({
             color={EStyleSheet.value(
               isDark ? '$colors_white' : '$colors_dark',
             )}>
-            Oh no! Ya te vas...{'\n'}¿Quieres cerrar sesión?
+            {t('common.ohNo')}
           </Text>
           <Separator thickness={10} />
           <Text fontSize={16} color={isDark ? '#A6A6A6' : '#686868'}>
-            ¿Está seguro de que desea cerrar sesión en su cuenta de momento?
+            {t('common.sureLogOut')}
           </Text>
           <Separator thickness={55} />
           <View style={GlobalStyles.row}>
             <Button
               buttonStyle={GlobalStyles.flex}
-              text="Cerrar Sesión"
+              text={t('button.logOut') as string}
               textProps={{
                 weight: 'Regular',
               }}
@@ -65,7 +67,7 @@ const ModalSignOut: React.FC<ModalSignOutProps> = ({
               colorText={EStyleSheet.value('$colors_dangerTab')}
             />
             <Button
-              text="Cancelar"
+              text={t('button.cancel') as string}
               textProps={{
                 weight: 'Regular',
               }}
@@ -81,7 +83,7 @@ const ModalSignOut: React.FC<ModalSignOutProps> = ({
   );
 };
 
-export default memo(ModalSignOut);
+export default withTranslation()(memo(ModalSignOut));
 
 const modalView = {
   zIndex: 1,

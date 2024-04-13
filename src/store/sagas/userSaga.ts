@@ -5,8 +5,8 @@ import AuthServices from 'services/auth-services';
 
 import {onError, safe} from 'utils/functions-saga';
 import Toast from 'react-native-toast-message';
-import {LabelSuccess} from 'utils/text';
 import {Screen, navigationRef} from 'utils/constants/screens';
+import {t} from 'i18next';
 
 function* signInSaga(
   action: PayloadAction<{
@@ -29,7 +29,7 @@ function* signInSaga(
   if (!user.isNew) {
     Toast.show({
       type: 'success',
-      text1: LabelSuccess.sign_in_success,
+      text1: t('success.sign_in_success') as string,
       visibilityTime: 1100,
     });
   }
@@ -52,7 +52,7 @@ function* updateProfileSaga(action: PayloadAction<IUserRequest>) {
   yield put(userActions.updateProfileSuccess(data.result));
   Toast.show({
     type: 'success',
-    text1: LabelSuccess.profile_updated,
+    text1: t('success.profile_updated') as string,
     visibilityTime: 1100,
   });
 }
@@ -68,7 +68,7 @@ function* changePasswordSettingsSaga(
   yield put(userActions.changePasswordSettingsSuccess());
   Toast.show({
     type: 'success',
-    text1: LabelSuccess.password_updated,
+    text1: t('success.password_updated') as string,
     visibilityTime: 1100,
   });
 }
@@ -93,7 +93,7 @@ function* changePasswordAuthenticatedSaga(
   yield put(userActions.changePasswordSuccess());
   Toast.show({
     type: 'success',
-    text1: LabelSuccess.sign_in_success,
+    text1: t('success.sign_in_success') as string,
     visibilityTime: 1100,
   });
 }

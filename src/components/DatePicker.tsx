@@ -12,12 +12,13 @@ import {fontMaker} from 'font';
 import {GlobalStyles} from 'theme/globalStyle';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 export type InputTheme = 'light' | 'dark';
 
 const HIT_SLOP = {left: 25, right: 20, bottom: 30, top: 30};
 
-export interface PickerProps {
+export interface PickerProps extends WithTranslation {
   onChangeDate?: (value: string) => void;
   customStyle?: StyleProp<ViewStyle>;
   customLabel?: StyleProp<ViewStyle>;
@@ -34,7 +35,7 @@ export interface PickerProps {
   error?: any;
 }
 
-const defaultProps: PickerProps = {
+const defaultProps: any = {
   iconProps: {name: ''},
   value: '',
   placeholder: '01/01/1998',
@@ -43,6 +44,7 @@ const defaultProps: PickerProps = {
 };
 
 const Picker: React.FC<PickerProps> = ({
+  i18n,
   onChangeDate,
   labelProps,
   labelErrorProps,
@@ -131,7 +133,7 @@ const Picker: React.FC<PickerProps> = ({
         isVisible={isDatePickerVisible}
         mode="date"
         themeVariant="dark"
-        locale="es"
+        locale={i18n.language}
         isDarkModeEnabled
         date={value ? moment(value, 'DD/MM/YYYY').toDate() : undefined}
         maximumDate={new Date()}
@@ -142,7 +144,7 @@ const Picker: React.FC<PickerProps> = ({
   );
 };
 
-export default withDefaults(Picker, defaultProps);
+export default withTranslation()(withDefaults(Picker, defaultProps));
 
 const inputStyle = {
   height: rHeight(40),

@@ -1,5 +1,120 @@
 {
   "translation": {
-    "hello": "Hello"
+    "common": {
+      "signIn": "Sign In",
+      "signInSubtitle": "To continue using the app",
+      "forgotPassword": "Recover Password",
+      "forgotPasswordSubtitle": "Enter your email and we will send instructions to recover your password",
+      "emailSend": "Email Sent",
+      "emailSendDescription": "We have sent you an email with instructions on how to reset your password.\n\nPlease check your inbox and if you do not find the email there, check your spam or junk mail folder.",
+      "coaches": "Coaches",
+      "coachFemale": "Coach",
+      "coachMale": "Coach",
+      "withoutCoach": "No Coach",
+      "hello": "Hello",
+      "welcomeTo": "Welcome to",
+      "beforeStart": "Before you start training\nchange your password",
+      "indications": "Indications",
+      "time": "Time",
+      "every": "Every",
+      "for": "For",
+      "rounds": "Rounds",
+      "round": "Round",
+      "work": "Work",
+      "rest": "Rest",
+      "myNote": "My note",
+      "deleteRecordPrev": "Do you want to delete your record in",
+      "finishBlock": "Did you finish the",
+      "blockedPlanning": "Your planning\nhas been blocked",
+      "account": "Account",
+      "editProfile": "Edit Profile",
+      "changePassword": "Change Password",
+      "more": "More",
+      "policyPrivacy": "Privacy Policy",
+      "termsAndConditions": "Terms and Conditions",
+      "version": "Version",
+      "ohNo": "Oh no! You're leaving...\nDo you want to log out?",
+      "sureLogOut": "Are you sure you want to log out of your account for now?",
+      "male": "Male",
+      "female": "Female",
+      "genderSelection": "Gender selection",
+      "selectMeasurement": "Select measurement"
+    },
+    "header": {
+      "editProfile": "Edit Profile",
+      "settings": "Settings",
+      "changePassword": "Change Password"
+    },
+    "input": {
+      "email": "Email",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "birthday": "Birthday",
+      "gender": "Gender",
+      "weight": "Weight",
+      "height": "Height",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "forgotPassword": "Forgot Password?"
+    },
+    "button": {
+      "signIn": "Log In",
+      "startTraining": "Start Training",
+      "forgotPassword": "Recover Password",
+      "saveChanges": "Save Changes",
+      "goToLogin": "Go to Login",
+      "logOut": "Log Out",
+      "changePassword": "Change Password",
+      "retry": "Retry",
+      "addNote": "Add note",
+      "editNote": "Edit note",
+      "yes": "Yes",
+      "cancel": "Cancel"
+    },
+    "validations": {
+      "emailRequired": "Email is required.",
+      "emailMatch": "Please enter a valid email.",
+      "passwordRequired": "Password is required.",
+      "verifyPasswordRequired": "Password confirmation is required.",
+      "verifyPasswordNotEqual": "Passwords must match."
+    },
+    "success": {
+      "sign_in_success": "Successful Sign In!",
+      "profile_updated": "Profile Updated!",
+      "password_updated": "Password Updated!"
+    },
+    "rules": {
+      "required": "Password is required.",
+      "minCharacter": "Password must be at least 8 characters long.",
+      "latterUppercase": "Password must contain at least one uppercase letter.",
+      "latterLowercase": "One lowercase letter.",
+      "specialCharacter": "Password must contain at least one number or special character."
+    },
+    "errors": {
+      "generic": "There was an error, please try again.",
+      "token_expired": "Session expired, please log in again.",
+      "auth_error": "Incorrect email or password.",
+      "email_required": "Email is required.",
+      "repassword_required": "Password confirmation is required.",
+      "change_old_password": "The old password is incorrect.",
+      "password_not_match": "Confirmation does not match the password.",
+      "password_required": "Password is required.",
+      "first_name_required": "First name is required.",
+      "last_name_required": "Last name is required.",
+      "weight_required": "Weight is required.",
+      "height_required": "Height is required.",
+      "user_already_exists": "The user exists.",
+      "user_not_exist": "The user does not exist.",
+      "failed_to_update_user": "There was an error updating the user.",
+      "password_error": "Current password incorrect",
+      "passwordExpired": "The time to change your password has expired, please request to change your password again."
+    },
+    "tabs": {
+      "calendar": "Calendar",
+      "settings": "Settings"
+    }
   }
 }

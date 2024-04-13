@@ -64,24 +64,23 @@ export const TextRules = {
 };
 
 export const LabelError = {
-  generic: 'Hubo un error, por favor intente de nuevo.',
-  token_expired: 'Sesión caducada, por favor inicie sesión de nuevo.',
-  auth_error: 'Correo o contraseña incorrectos.',
-  email_required: 'El email es requerido.',
-  repassword_required: 'La confirmacion contraseña es requerida.',
-  change_old_password: 'La contraseña anterior es incorrecta.',
-  password_not_match: 'La confirmacion no coincide con la contraseña.',
-  password_required: 'La contraseña es requerida.',
-  first_name_required: 'El nombre es requerido.',
-  last_name_required: 'El apellido es requerido.',
-  weight_required: 'El peso es requerido.',
-  height_required: 'La altura es requerida.',
-  user_already_exists: 'El usuario existe.',
-  user_not_exist: 'El usuario no existe.',
-  failed_to_update_user: 'Hubo un error al actualizar el usuario.',
-  password_error: 'Contraseña actual incorrecta',
-  passwordExpired:
-    'El tiempo para cambiar su contraseña ha expirado, solicite cambiar su contraseña nuevamente.',
+  generic: 'generic',
+  token_expired: 'token_expired',
+  auth_error: 'auth_error',
+  email_required: 'email_required',
+  repassword_required: 'repassword_required',
+  change_old_password: 'change_old_password',
+  password_not_match: 'password_not_match',
+  password_required: 'password_required',
+  first_name_required: 'first_name_required',
+  last_name_required: 'last_name_required',
+  weight_required: 'weight_required',
+  height_required: 'height_required',
+  user_already_exists: 'user_already_exists',
+  user_not_exist: 'user_not_exist',
+  failed_to_update_user: 'failed_to_update_user',
+  password_error: 'password_error',
+  passwordExpired: 'passwordExpired',
 };
 
 export const LabelSuccess = {

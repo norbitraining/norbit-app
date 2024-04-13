@@ -15,8 +15,11 @@ import {Screen, navigationRef} from 'utils/constants/screens';
 import actions from './actions';
 import {Svg} from 'assets/svg';
 import Separator from 'components/Separator';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-const ConfirmationSuccess = () => {
+interface ConfirmationSuccessProps extends WithTranslation {}
+
+const ConfirmationSuccess: React.FC<ConfirmationSuccessProps> = ({t}) => {
   const route =
     useRoute<RouteProp<AppRootParamList, Screen.CONFIRMATION_SUCCESS>>();
 
@@ -45,14 +48,14 @@ const ConfirmationSuccess = () => {
             color={EStyleSheet.value('$colors_white')}
             align="center"
             weight="Medium">
-            {caseAction?.title}
+            {t(caseAction?.title || '')}
           </Text>
         </View>
 
         <Separator thickness="10%" />
         <View style={styles.contentMessage}>
           <Text color="white" align="left" weight="Light" fontSize={16}>
-            {caseAction?.description}
+            {t(caseAction?.description || '')}
           </Text>
         </View>
       </View>
@@ -64,7 +67,7 @@ const ConfirmationSuccess = () => {
             color: 'white',
             style: {textTransform: 'uppercase'},
           }}
-          text={caseAction?.buttonText}
+          text={t(caseAction?.buttonText || '') as string}
           colorText={EStyleSheet.value('$colors_black')}
           onPress={onSubmit}
         />
@@ -73,7 +76,7 @@ const ConfirmationSuccess = () => {
   );
 };
 
-export default ConfirmationSuccess;
+export default withTranslation()(ConfirmationSuccess);
 
 const styles = StyleSheet.create({
   contentInfo: {flex: 1, justifyContent: 'center'},

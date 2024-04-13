@@ -12,7 +12,6 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import BackgroundContainer from 'components/BackgroundContainer';
 import {isAndroid, rHeight, rWidth, StyleSheet} from 'utils';
 import Text from 'components/Text';
-import {Input, Label, ButtonText, ValidationText} from 'utils/text';
 import {margin, padding} from 'theme/spacing';
 import Separator from 'components/Separator';
 import TextInput from 'components/TextInput';
@@ -21,26 +20,33 @@ import {userActions} from 'store/reducers/user';
 import {useSelector} from 'store/reducers/rootReducers';
 import {Svg} from 'assets/svg';
 import Header from 'components/Header';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const BEHAVIOR = isAndroid ? undefined : 'padding';
 
-interface ForgotPasswordProps {
+interface ForgotPasswordProps extends WithTranslation {
   forgotPasswordAction: typeof userActions.forgotPasswordAction;
 }
 
-const schema = yup
-  .object({
-    email: yup
-      .string()
-      .email(ValidationText.emailMatch)
-      .required(ValidationText.emailRequired),
-  })
-  .required();
-
 const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
+  t,
   forgotPasswordAction,
 }) => {
   const currentUser = useSelector(state => state.user);
+
+  const schema = React.useMemo(
+    () =>
+      yup
+        .object({
+          email: yup
+            .string()
+            .email(t('validations.emailMatch') as string)
+            .required(t('validations.emailRequired') as string),
+        })
+        .required(),
+    [t],
+  );
+
   const {
     handleSubmit,
     control,
@@ -80,12 +86,12 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
             </View>
             <View>
               <Text fontSize={24} color="white" weight="Medium" align="center">
-                {Label.forgotPassword}
+                {t('common.forgotPassword')}
               </Text>
 
               <Separator thickness={15} />
               <Text fontSize={16} color="white" weight="Light" align="center">
-                {Label.forgotPasswordSubtitle}
+                {t('common.forgotPasswordSubtitle')}
               </Text>
             </View>
             <Separator thickness="8%" />
@@ -93,7 +99,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <TextInput
-                  label={Input.email}
+                  label={t('input.email') as string}
                   textInputProps={{
                     onBlur: onBlur,
                     onChangeText: onChange,
@@ -110,7 +116,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
 
             <View style={padding.ph10}>
               <Button
-                text={ButtonText.forgotPassword}
+                text={t('button.forgotPassword') as string}
                 onPress={handleSubmit(onSubmit)}
                 textProps={{
                   fontSize: rHeight(14),
@@ -128,7 +134,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordProps> = ({
   );
 };
 
-export default ForgotPasswordScreen;
+export default withTranslation()(ForgotPasswordScreen);
 
 const styles = StyleSheet.create({
   logo: {width: rWidth(200), height: rWidth(50)},

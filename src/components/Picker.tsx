@@ -11,6 +11,7 @@ import Text, {TextCustomProps} from './Text';
 import {fontMaker} from 'font';
 import {GlobalStyles} from 'theme/globalStyle';
 import PickerModal from '@freakycoder/react-native-picker-modal';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 export type InputTheme = 'light' | 'dark';
 
@@ -20,13 +21,9 @@ type TListPicker = {
   [x in ListType]: string[];
 };
 
-const list: TListPicker = {
-  gender: ['Femenino', 'Masculino'],
-};
-
 const HIT_SLOP = {left: 25, right: 20, bottom: 30, top: 30};
 
-export interface PickerProps {
+export interface PickerProps extends WithTranslation {
   onChangeSelection?: (value: string) => void;
   customStyle?: StyleProp<ViewStyle>;
   customLabel?: StyleProp<ViewStyle>;
@@ -42,10 +39,9 @@ export interface PickerProps {
   error?: any;
 }
 
-const defaultProps: PickerProps = {
+const defaultProps: any = {
   iconProps: {name: ''},
   value: '',
-  labelModal: 'Selección de género',
   typeList: 'gender',
 
   theme: 'dark',
@@ -53,6 +49,7 @@ const defaultProps: PickerProps = {
 };
 
 const Picker: React.FC<PickerProps> = ({
+  t,
   onChangeSelection,
   labelProps,
   typeList,
@@ -65,6 +62,10 @@ const Picker: React.FC<PickerProps> = ({
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const list: TListPicker = {
+    gender: [t('common.female'), t('common.male')],
+  };
+
   const pickerList = list[typeList] || [];
 
   const onPressShowModal = () => {
@@ -73,7 +74,11 @@ const Picker: React.FC<PickerProps> = ({
 
   const onPressItemSelection = (_value: string | number) => {
     const newValue =
-      typeList === 'gender' ? (_value === 'Femenino' ? 'F' : 'M') : _value;
+      typeList === 'gender'
+        ? _value === 'Femenino' || _value === 'Female'
+          ? 'F'
+          : 'M'
+        : _value;
     onChangeSelection?.(newValue as string);
     onPressShowModal();
   };
@@ -83,13 +88,13 @@ const Picker: React.FC<PickerProps> = ({
       return value;
     }
     if (value === 'F') {
-      return 'Femenino';
+      return t('common.female');
     }
     if (value === 'M') {
-      return 'Masculino';
+      return t('common.male');
     }
     return value;
-  }, [typeList, value]);
+  }, [t, typeList, value]);
 
   return (
     <View style={[styles.containerInput]}>
@@ -143,7 +148,7 @@ const Picker: React.FC<PickerProps> = ({
         </View>
       )}
       <PickerModal
-        title={labelModal || ''}
+        title={labelModal || t('common.genderSelection')}
         isVisible={showModal}
         data={pickerList}
         onPress={onPressItemSelection}
@@ -154,7 +159,7 @@ const Picker: React.FC<PickerProps> = ({
   );
 };
 
-export default withDefaults(Picker, defaultProps);
+export default withTranslation()(withDefaults(Picker, defaultProps));
 
 const inputStyle = {
   height: rHeight(40),

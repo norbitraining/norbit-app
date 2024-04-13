@@ -9,12 +9,12 @@ import {GlobalStyles} from 'theme/globalStyle';
 import {margin} from 'theme/spacing';
 
 import BottomSheetCoachList from './BottomSheetCoachList';
-import {Label} from 'utils/text';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-type CoachSelectionProps = {};
+interface CoachSelectionProps extends WithTranslation {}
 
-const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({}) => {
+const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({t}) => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const currentCoachSelected = useSelector(x => x.coaches.coachSelected);
   const currentCoachList = useSelector(x => x.coaches.coaches);
@@ -45,8 +45,8 @@ const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({}) => {
             <View>
               <Text color="white" fontSize={12}>
                 {currentCoachSelected?.coach.gender === '1'
-                  ? Label.coachMale
-                  : Label.coachFemale}
+                  ? t('common.coachMale')
+                  : t('common.coachFemale')}
               </Text>
               <Text color="white" fontSize={12} weight="Light">
                 {fullName}
@@ -61,7 +61,7 @@ const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({}) => {
         )}
         {!currentCoachSelected && (
           <Text color={EStyleSheet.value('$colors_dangerTab')} fontSize={12}>
-            {Label.withoutCoach}
+            {t('common.withoutCoach')}
           </Text>
         )}
       </TouchableOpacity>
@@ -79,6 +79,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 8,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
   },
   initials: {
     ...GlobalStyles.center,
@@ -90,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CoachSelection;
+export default withTranslation()(CoachSelection);

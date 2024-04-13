@@ -99,7 +99,7 @@ export default withDefaults(Button, defaultProps);
 
 const styles = StyleSheet.create({
   buttonColor: {
-    borderRadius: 2,
+    borderRadius: 4,
     backgroundColor: '$colors_secondary',
     alignItems: 'center',
     justifyContent: 'center',

@@ -21,6 +21,7 @@ const GlobalStyles = StyleSheet.create({
   flexible: {
     flex: 1,
   },
+  lowercase: {textTransform: 'lowercase'},
   redText: {
     color: 'red',
   },

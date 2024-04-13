@@ -206,8 +206,8 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				ADA2A190A5F6BB70BAC5AFCB /* [CP] Embed Pods Frameworks */,
 				F32CFA1D90E1ECCC1A20CBA3 /* [CP] Copy Pods Resources */,
+				31209D7377243AA46F0CA184 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -229,10 +229,10 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				3CAA18E400CE43F016A43BBF /* [CP] Embed Pods Frameworks */,
 				F282C5C861838740DBDD8F42 /* [CP] Copy Pods Resources */,
 				DFD6C2C402B08FFE96B66556 /* [CP-User] [RNFB] Core Configuration */,
 				F56E004F9FB6F67580029BBA /* [CP-User] [RNFB] Crashlytics Configuration */,
+				2A1E8BDE606C7C21AE9EA976 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -328,7 +328,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3CAA18E400CE43F016A43BBF /* [CP] Embed Pods Frameworks */ = {
+		2A1E8BDE606C7C21AE9EA976 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,6 +343,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-norbitApp/Pods-norbitApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		31209D7377243AA46F0CA184 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9F4DD6F050D132111653FD4B /* [CP] Check Pods Manifest.lock */ = {
@@ -365,23 +382,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ADA2A190A5F6BB70BAC5AFCB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-norbitApp-norbitAppTests/Pods-norbitApp-norbitAppTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C50A9501E9D3798B0F836FE1 /* [CP] Check Pods Manifest.lock */ = {

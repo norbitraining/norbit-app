@@ -31,11 +31,14 @@ import CoachSelection from 'components/CoachSelection';
 import {useSelector} from 'store/reducers/rootReducers';
 import moment from 'moment';
 import 'moment/locale/es';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const PAGE_WIDTH = Dimensions.get('screen').width;
 
-export const Header: FC<CalendarHeaderProps> = memo(
-  ({currentMonth, onChangeMonth, onChangeFullDate, currentDate}) => {
+interface HeaderProps extends CalendarHeaderProps, WithTranslation {}
+
+const HeaderComponent: FC<HeaderProps> = memo(
+  ({i18n, currentMonth, onChangeMonth, onChangeFullDate, currentDate}) => {
     const ref = useRef<ICarouselInstance | any>();
     const [showModalYears, setShowModalYears] = useState<boolean>(false);
     const [fullDate, setFullDate] = useState<Date>(new Date());
@@ -53,18 +56,22 @@ export const Header: FC<CalendarHeaderProps> = memo(
       setFullDate(currentDate);
     }, [currentDate, fullDate]);
 
-    function getMonthName(monthNumber: number) {
-      const date = moment({
-        month: monthNumber === 0 ? 11 : monthNumber - 1,
-        day: 1,
-      });
-      return date.locale('es').format('MMMM');
-    }
+    const getMonthName = React.useCallback(
+      (monthNumber: number) => {
+        const date = moment({
+          month: monthNumber === 0 ? 11 : monthNumber - 1,
+          day: 1,
+        });
+        return date.locale(i18n.language).format('MMMM');
+      },
+      [i18n.language],
+    );
+
     const getYear = useMemo(() => {
       const date = moment(fullDate);
 
-      return date.locale('es').format('YYYY');
-    }, [fullDate]);
+      return date.locale(i18n.language).format('YYYY');
+    }, [fullDate, i18n.language]);
 
     const progressValue = useSharedValue<number>(0);
     const baseOptions = {
@@ -157,7 +164,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
           </TouchableOpacity>
         );
       },
-      [currentMonth, isBlocked],
+      [currentMonth, getMonthName, isBlocked],
     );
 
     return (
@@ -207,7 +214,7 @@ export const Header: FC<CalendarHeaderProps> = memo(
             marginBottom: insets.bottom,
           }}
           themeVariant="dark"
-          locale="es"
+          locale={i18n.language}
           isDarkModeEnabled
           date={fullDate}
           onConfirm={onPressDateSelection}
@@ -217,3 +224,4 @@ export const Header: FC<CalendarHeaderProps> = memo(
     );
   },
 );
+export const Header = withTranslation()(HeaderComponent);

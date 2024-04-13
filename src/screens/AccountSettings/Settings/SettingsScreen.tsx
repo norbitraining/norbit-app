@@ -22,9 +22,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFeather from 'react-native-vector-icons/Feather';
 import Header from 'components/Header';
 import Separator from 'components/Separator';
-import {ButtonText, HeaderText} from 'utils/text';
 import ModalSignOut from 'components/ModalSignOut';
 import DeviceInfo from 'react-native-device-info';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const keyExtractor = (item: any, index: number) => `${item.text}-${index}`;
 interface Item {
@@ -39,9 +39,9 @@ interface Section {
   data: Item[];
 }
 
-interface SettingsScreenProps {}
+interface SettingsScreenProps extends WithTranslation {}
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
+const SettingsScreen: React.FC<SettingsScreenProps> = ({t}) => {
   const scheme = useColorScheme();
 
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
@@ -52,35 +52,37 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
 
   const DataConfig: Section[] = [
     {
-      title: 'Cuenta',
+      title: t('common.account'),
+      // eslint-disable-next-line react/no-unstable-nested-components
       SectionIcon: (props: any) => <IconFeather {...props} name="user" />,
       data: [
         {
-          text: 'Editar Perfil',
+          text: t('common.editProfile'),
           screenName: Screen.PROFILE,
         },
         {
-          text: 'Cambiar Contraseña',
+          text: t('common.changePassword'),
           screenName: Screen.CHANGE_PASSWORD_SETTINGS,
         },
       ],
     },
     {
-      title: 'Mas',
+      title: t('common.more'),
+      // eslint-disable-next-line react/no-unstable-nested-components
       SectionIcon: (props: any) => (
         <Icon {...props} name="checkbox-blank-badge-outline" />
       ),
       data: [
         {
-          text: 'Politica y privacidad',
+          text: t('common.policyPrivacy'),
           url: 'https://norbitraining.com/privacy-policy',
         },
         {
-          text: 'Términos y condiciones',
+          text: t('common.termsAndConditions'),
           url: 'https://norbitraining.com/terms',
         },
         {
-          text: `Version ${version}`,
+          text: `${t('common.version')} ${version}`,
         },
       ],
     },
@@ -92,64 +94,78 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
     setShowModalSignOut(false);
   };
 
-  const SectionHeader = ({
-    section: {title, SectionIcon},
-  }: SectionListData<{title: string; SectionIcon: string}>) => {
-    return (
-      <View style={isDark ? styles.headerDark : styles.header}>
-        <SectionIcon
-          size={20}
-          color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          style={styles.icon}
-        />
-        <Text
-          color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={fontNormalize(18)}
-          align="left">
-          {title}
-        </Text>
-      </View>
-    );
-  };
-  const SectionRenderItem: SectionListRenderItem<Item> = ({item}) => {
-    const handleItem = () => {
-      if (item.url) {
-        Linking.openURL(item.url);
-      }
-      if (!item.screenName) {
-        return;
-      }
-      navigationRef.navigate(item.screenName);
-    };
-    return (
-      <TouchableOpacity
-        style={[GlobalStyles.row, styles.item]}
-        activeOpacity={0.8}
-        onPress={handleItem}>
-        <Text
-          color={EStyleSheet.value(isDark ? '$colors_white' : '$colors_black')}
-          fontSize={fontNormalize(15)}
-          align="left"
-          weight="Light">
-          {item.text}
-        </Text>
-        {(item.screenName || item.url) && (
-          <Icon
-            name="chevron-right"
+  const SectionHeader = React.useCallback(
+    ({
+      section: {title, SectionIcon},
+    }: SectionListData<{title: string; SectionIcon: string}>) => {
+      return (
+        <View style={isDark ? styles.headerDark : styles.header}>
+          <SectionIcon
+            size={20}
             color={EStyleSheet.value(
               isDark ? '$colors_white' : '$colors_black',
             )}
-            size={rWidth(24)}
+            style={styles.icon}
           />
-        )}
-      </TouchableOpacity>
-    );
-  };
+          <Text
+            color={EStyleSheet.value(
+              isDark ? '$colors_white' : '$colors_black',
+            )}
+            fontSize={fontNormalize(18)}
+            align="left">
+            {title}
+          </Text>
+        </View>
+      );
+    },
+    [isDark],
+  );
+
+  const SectionRenderItem: SectionListRenderItem<Item> = React.useCallback(
+    ({item}) => {
+      const handleItem = () => {
+        if (item.url) {
+          Linking.openURL(item.url);
+        }
+        if (!item.screenName) {
+          return;
+        }
+        navigationRef.navigate(item.screenName);
+      };
+      return (
+        <TouchableOpacity
+          style={[GlobalStyles.row, styles.item]}
+          activeOpacity={0.8}
+          onPress={handleItem}>
+          <Text
+            color={EStyleSheet.value(
+              isDark ? '$colors_white' : '$colors_black',
+            )}
+            fontSize={fontNormalize(15)}
+            align="left"
+            weight="Light">
+            {item.text}
+          </Text>
+          {(item.screenName || item.url) && (
+            <Icon
+              name="chevron-right"
+              color={EStyleSheet.value(
+                isDark ? '$colors_white' : '$colors_black',
+              )}
+              size={rWidth(24)}
+            />
+          )}
+        </TouchableOpacity>
+      );
+    },
+    [isDark],
+  );
+
   return (
     <View style={isDark ? GlobalStyles.container : GlobalStyles.containerWhite}>
       <Separator thickness={5} />
       <Header
-        text={HeaderText.settings}
+        text={t('header.settings') as string}
         showBackButton={false}
         textColor={EStyleSheet.value(
           isDark ? '$colors_white' : '$colors_black',
@@ -181,7 +197,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({}) => {
             fontSize={18}
             color={EStyleSheet.value('$colors_danger')}
             weight="Light">
-            {ButtonText.logOut}
+            {t('button.logOut')}
           </Text>
         </TouchableOpacity>
 
@@ -234,4 +250,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsScreen;
+export default withTranslation()(SettingsScreen);

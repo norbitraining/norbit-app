@@ -7,7 +7,6 @@ import {yupResolver} from '@hookform/resolvers/yup';
 
 import {GlobalStyles} from 'theme/globalStyle';
 import {isAndroid, rHeight, rWidth, StyleSheet} from 'utils';
-import {ButtonText, Input, TextRules, ValidationText} from 'utils/text';
 import {padding} from 'theme/spacing';
 import {userActions} from 'store/reducers/user';
 import {useSelector} from 'store/reducers/rootReducers';
@@ -19,10 +18,11 @@ import TextInput from 'components/TextInput';
 import Text from 'components/Text';
 import Button from 'components/Button';
 import {Svg} from 'assets/svg';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const BEHAVIOR = isAndroid ? undefined : 'padding';
 
-interface SignInChangePasswordScreenProps {
+interface SignInChangePasswordScreenProps extends WithTranslation {
   changePasswordAuthenticatedAction: typeof userActions.changePasswordAuthenticatedAction;
 }
 
@@ -31,49 +31,60 @@ interface TextRule {
   regex: RegExp;
 }
 
-const textRuleList: TextRule[] = [
+const textRules = (t: any): TextRule[] => [
   {
-    label: TextRules.required,
+    label: t('rules.required'),
     regex: /\S/,
   },
   {
-    label: TextRules.minCharacter,
+    label: t('rules.minCharacter'),
     regex: /.{8,}$/,
   },
   {
-    label: TextRules.latterUppercase,
+    label: t('rules.latterUppercase'),
     regex: /[A-Z]/,
   },
   {
-    label: TextRules.latterLowercase,
+    label: t('rules.latterLowercase'),
     regex: /[a-z]/,
   },
   {
-    label: TextRules.specialCharacter,
+    label: t('rules.specialCharacter'),
     regex: /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/,
   },
 ];
 
-const schema = yup
-  .object({
-    password: yup
-      .string()
-      .required()
-      .min(8)
-      .matches(/[A-Z]/)
-      .matches(/[a-z]/)
-      .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/),
-    confirmPassword: yup
-      .string()
-      .required(ValidationText.verifyPasswordRequired)
-      .oneOf([yup.ref('password')], ValidationText.verifyPasswordNotEqual),
-  })
-  .required();
-
 const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
+  t,
   changePasswordAuthenticatedAction,
 }) => {
   const currentUser = useSelector(state => state.user);
+
+  const schema = React.useMemo(
+    () =>
+      yup
+        .object({
+          password: yup
+            .string()
+            .required()
+            .min(8)
+            .matches(/[A-Z]/)
+            .matches(/[a-z]/)
+            .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?])/),
+          confirmPassword: yup
+            .string()
+            .required(t('validations.verifyPasswordRequired') as string)
+            .oneOf(
+              [yup.ref('password')],
+              t('validations.verifyPasswordNotEqual') as string,
+            ),
+        })
+        .required(),
+    [t],
+  );
+
+  const textRuleList = React.useMemo(() => textRules(t), [t]);
+
   const {
     handleSubmit,
     control,
@@ -146,14 +157,14 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
               <Separator thickness={24} />
             </View>
             <Text color="white" fontSize={24} weight="Medium" align="center">
-              ¡Hola {currentUser.user?.first_name}!
+              {t('common.hello')} {currentUser.user?.first_name}!
             </Text>
             <Text color="white" fontSize={24} weight="Medium" align="center">
-              Bienvenido a NORBIT
+              {t('common.welcomeTo')} NORBIT
             </Text>
             <Separator thickness={18} />
             <Text color="white" fontSize={16} weight="Light" align="center">
-              Antes de entrenar{'\n'}cambia tu contraseña
+              {t('common.beforeStart')}
             </Text>
           </View>
         </View>
@@ -164,7 +175,7 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <TextInput
-                  label={Input.password}
+                  label={t('input.password') as string}
                   textInputProps={{
                     onBlur: onBlur,
                     onChangeText: onChange,
@@ -183,7 +194,7 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
               control={control}
               render={({field: {onChange, onBlur, value}}) => (
                 <TextInput
-                  label={Input.confirmPassword}
+                  label={t('input.confirmPassword') as string}
                   textInputProps={{
                     onBlur: onBlur,
                     onChangeText: onChange,
@@ -206,7 +217,7 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
       </KeyboardAvoidingView>
       <View style={styles.contentButton}>
         <Button
-          text={ButtonText.startTraining}
+          text={t('button.startTraining') as string}
           onPress={handleSubmit(onSubmit)}
           textProps={{
             fontSize: rHeight(14),
@@ -222,7 +233,7 @@ const SignInChangePasswordScreen: React.FC<SignInChangePasswordScreenProps> = ({
   );
 };
 
-export default SignInChangePasswordScreen;
+export default withTranslation()(SignInChangePasswordScreen);
 
 const styles = StyleSheet.create({
   logo: {width: rWidth(200), height: rWidth(50)},

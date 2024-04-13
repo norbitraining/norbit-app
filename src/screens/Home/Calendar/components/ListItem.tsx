@@ -37,14 +37,15 @@ import ButtonCheck from './ButtonCheck';
 import {useSelector} from 'store/reducers/rootReducers';
 import ColumnNote from './ColumnNote';
 import ContainerMessage from './ContainerMessage';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-type ListItemProps = {
+interface ListItemProps extends WithTranslation {
   item: PlanningColumn;
   planningId: number;
   index: number;
-};
+}
 
-const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
+const ListItemComponent: React.FC<ListItemProps> = ({t, item, planningId}) => {
   const scheme = useColorScheme();
   const isDark = useMemo(() => scheme === 'dark', [scheme]);
 
@@ -66,6 +67,16 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
     [expanded],
   );
   const iconRotate = useSharedValue<number>(record?.isFinish ? 0 : 1);
+
+  const labelType = React.useCallback(
+    (card: PlanningCard) =>
+      getLabelActivityType(card.selectedActivityType, card.value1)?.includes(
+        '.',
+      )
+        ? t(getLabelActivityType(card.selectedActivityType, card.value1) || '')
+        : getLabelActivityType(card.selectedActivityType, card.value1),
+    [t],
+  );
 
   const onLayout = useCallback(
     (_event: LayoutChangeEvent) => {
@@ -187,10 +198,7 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
                     weight="Light"
                     color={isDark ? 'white' : 'black'}>
                     {card.selectedActivityType === 'round' && card.value1}
-                    {getLabelActivityType(
-                      card.selectedActivityType,
-                      card.value1,
-                    )}
+                    {` ${labelType(card)}`}
                   </Text>
 
                   <Animated.View style={animatedArrowStyle}>
@@ -230,7 +238,10 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
               <ColumnNote planningId={planningId} column={item} />
               <Separator thickness={8} />
               {Boolean(card.comment) && (
-                <ContainerMessage label="Indicaciones" value={card.comment} />
+                <ContainerMessage
+                  label={t('common.indications')}
+                  value={card.comment}
+                />
               )}
 
               {card.exerciseList.map((exercise, indexExercise) => {
@@ -266,120 +277,98 @@ const ListItem: React.FC<ListItemProps> = ({item, planningId}) => {
   );
 };
 
-const DetailByTime = ({
-  card,
-  isDark,
-}: {
-  card: PlanningCard;
-  isDark: boolean;
-}) => {
-  return (
-    <>
-      {(card.selectedActivityType === 'fortime' ||
-        card.selectedActivityType === 'amrap') && (
-        <View
-          style={[
-            GlobalStyles.row,
-            GlobalStyles.justifyContentEnd,
-            margin.mt5,
-          ]}>
-          <Text
-            fontSize={13}
-            color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-            {card.selectedActivityType === 'amrap' ? 'Tiempo: ' : 'Timecap: '}
-          </Text>
-          <Text
-            fontSize={13}
-            weight="Light"
-            color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-            {isDate(card.value1) && card.value1
-              ? format(new Date(card.value1), 'mm:ss')
-              : '00:00'}{' '}
-            min
-          </Text>
-        </View>
-      )}
-      {card.selectedActivityType === 'emom' && (
-        <View style={GlobalStyles.row}>
-          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
+const DetailByTime = withTranslation()(
+  ({
+    t,
+    card,
+    isDark,
+  }: {card: PlanningCard; isDark: boolean} & WithTranslation) => {
+    return (
+      <>
+        {(card.selectedActivityType === 'fortime' ||
+          card.selectedActivityType === 'amrap') && (
+          <View
+            style={[
+              GlobalStyles.row,
+              GlobalStyles.justifyContentEnd,
+              margin.mt5,
+            ]}>
             <Text
               fontSize={13}
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              Cada:
+              {card.selectedActivityType === 'amrap'
+                ? `${t('common.time')}: `
+                : 'Timecap: '}
             </Text>
             <Text
               fontSize={13}
               weight="Light"
               color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
               {isDate(card.value1) && card.value1
-                ? format(moment(card.value1).toDate(), 'mm:ss')
+                ? format(new Date(card.value1), 'mm:ss')
                 : '00:00'}{' '}
               min
             </Text>
           </View>
-          <View style={margin.mh5}>
-            <Text
-              fontSize={13}
-              weight="Light"
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              /{' '}
-            </Text>
-          </View>
-          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
-            <Text
-              fontSize={13}
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              Por:
-            </Text>
-            <Text
-              fontSize={13}
-              weight="Light"
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              {card.value2} rondas
-            </Text>
-          </View>
-        </View>
-      )}
-      {card.selectedActivityType === 'tabata' && (
-        <View style={[GlobalStyles.row]}>
-          <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
-            <Text
-              fontSize={13}
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              Rondas:{' '}
-            </Text>
-            <Text
-              fontSize={13}
-              weight="Light"
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              {card.value1}
-            </Text>
-          </View>
-
-          <View style={margin.mh5}>
-            <Text
-              fontSize={13}
-              weight="Light"
-              color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-              /
-            </Text>
-          </View>
+        )}
+        {card.selectedActivityType === 'emom' && (
           <View style={GlobalStyles.row}>
             <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
               <Text
                 fontSize={13}
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                Trabajo:{' '}
+                {t('common.every')}:
               </Text>
               <Text
                 fontSize={13}
                 weight="Light"
                 color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                {isDate(card.value2) && card.value2
-                  ? format(new Date(card.value2), 'mm:ss')
-                  : '00:00'}
+                {isDate(card.value1) && card.value1
+                  ? format(moment(card.value1).toDate(), 'mm:ss')
+                  : '00:00'}{' '}
+                min
               </Text>
             </View>
+            <View style={margin.mh5}>
+              <Text
+                fontSize={13}
+                weight="Light"
+                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
+                /{' '}
+              </Text>
+            </View>
+            <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
+              <Text
+                fontSize={13}
+                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
+                {t('common.for')}:
+              </Text>
+              <Text
+                fontSize={13}
+                weight="Light"
+                style={GlobalStyles.lowercase}
+                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
+                {card.value2} {t('common.rounds')}
+              </Text>
+            </View>
+          </View>
+        )}
+        {card.selectedActivityType === 'tabata' && (
+          <View style={[GlobalStyles.row]}>
+            <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
+              <Text
+                fontSize={13}
+                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
+                {t('common.rounds')}:{' '}
+              </Text>
+              <Text
+                fontSize={13}
+                weight="Light"
+                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
+                {card.value1}
+              </Text>
+            </View>
+
             <View style={margin.mh5}>
               <Text
                 fontSize={13}
@@ -388,26 +377,63 @@ const DetailByTime = ({
                 /
               </Text>
             </View>
-            <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
-              <Text
-                fontSize={13}
-                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                Descanso:{' '}
-              </Text>
-              <Text
-                fontSize={13}
-                weight="Light"
-                color={isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'}>
-                {isDate(card.value3) && card.value3
-                  ? format(new Date(card.value3), 'mm:ss')
-                  : '00:00'}
-              </Text>
+            <View style={GlobalStyles.row}>
+              <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
+                <Text
+                  fontSize={13}
+                  color={
+                    isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'
+                  }>
+                  {t('common.work')}:{' '}
+                </Text>
+                <Text
+                  fontSize={13}
+                  weight="Light"
+                  color={
+                    isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'
+                  }>
+                  {isDate(card.value2) && card.value2
+                    ? format(new Date(card.value2), 'mm:ss')
+                    : '00:00'}
+                </Text>
+              </View>
+              <View style={margin.mh5}>
+                <Text
+                  fontSize={13}
+                  weight="Light"
+                  color={
+                    isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'
+                  }>
+                  /
+                </Text>
+              </View>
+              <View style={[GlobalStyles.justifyContentEnd, margin.mt5]}>
+                <Text
+                  fontSize={13}
+                  color={
+                    isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'
+                  }>
+                  {t('common.rest')}:{' '}
+                </Text>
+                <Text
+                  fontSize={13}
+                  weight="Light"
+                  color={
+                    isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)'
+                  }>
+                  {isDate(card.value3) && card.value3
+                    ? format(new Date(card.value3), 'mm:ss')
+                    : '00:00'}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </>
-  );
-};
+        )}
+      </>
+    );
+  },
+);
+
+const ListItem = withTranslation()(ListItemComponent);
 
 export {ListItem};

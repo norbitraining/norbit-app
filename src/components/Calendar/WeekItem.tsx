@@ -7,6 +7,7 @@ import {
   colors,
   createLocalWeek,
   createWeekList,
+  Language,
 } from './helpers';
 import {GlobalStyles} from 'theme/globalStyle';
 import {getDate, getDay} from 'date-fns';
@@ -14,10 +15,13 @@ import {fontNormalize} from 'utils';
 import Text from 'components/Text';
 import {trigger} from 'react-native-haptic-feedback';
 import {useSelector} from 'store/reducers/rootReducers';
+import {WithTranslation, withTranslation} from 'react-i18next';
+
+interface WeekItemComponentProps extends WeekItemProps, WithTranslation {}
 
 function WeekItemAreEqual(
-  prevOrderBook: WeekItemProps,
-  nextOrderBook: WeekItemProps,
+  prevOrderBook: WeekItemComponentProps,
+  nextOrderBook: WeekItemComponentProps,
 ) {
   return (
     prevOrderBook.date === nextOrderBook.date &&
@@ -25,8 +29,8 @@ function WeekItemAreEqual(
   );
 }
 
-export const WeekItem: FC<WeekItemProps> = memo(
-  ({date, selectedDate: _selectedDate, onSelectDate}) => {
+const WeekItemComponent: FC<WeekItemComponentProps> = memo(
+  ({i18n, date, selectedDate: _selectedDate, onSelectDate}) => {
     const day = getDate(date);
 
     const isBlocked = useSelector(x => x.coaches.coachSelected?.blocked);
@@ -45,8 +49,8 @@ export const WeekItem: FC<WeekItemProps> = memo(
     }, [date, onSelectDate]);
 
     const weekList = useMemo(() => {
-      return createWeekList(createLocalWeek('es'));
-    }, []);
+      return createWeekList(createLocalWeek(i18n.language as Language));
+    }, [i18n.language]);
 
     const containerStyle = useMemo(
       (): ViewStyle => ({
@@ -96,3 +100,5 @@ export const WeekItem: FC<WeekItemProps> = memo(
   },
   WeekItemAreEqual,
 );
+
+export const WeekItem = withTranslation()(WeekItemComponent);

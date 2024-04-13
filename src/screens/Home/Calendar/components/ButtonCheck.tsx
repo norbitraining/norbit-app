@@ -20,109 +20,113 @@ import {
 import {useDispatch} from 'react-redux';
 import {useSelector} from 'store/reducers/rootReducers';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
-interface ButtonCheck {
+interface ButtonCheck extends WithTranslation {
   column: PlanningColumn;
   onFinishColumn: () => void;
   planningId: number;
 }
 
-export default React.memo<ButtonCheck>(function ButtonCheck({
-  column,
-  onFinishColumn,
-  planningId,
-}) {
-  const dispatch = useDispatch();
-  const scheme = useColorScheme();
+export default withTranslation()(
+  React.memo<ButtonCheck>(function ButtonCheck({
+    t,
+    column,
+    onFinishColumn,
+    planningId,
+  }) {
+    const dispatch = useDispatch();
+    const scheme = useColorScheme();
 
-  const isLoadingRecord = useSelector(x => x.planning.isLoadingRecord);
+    const isLoadingRecord = useSelector(x => x.planning.isLoadingRecord);
 
-  const handleRecordByPlanningColumn = React.useMemo(
-    () => getRecordByPlanningColumn(planningId, column.id),
-    [column.id, planningId],
-  );
-  const records = useSelector(handleRecordByPlanningColumn);
-  const record = React.useMemo(() => records?.[0] || null, [records]);
-
-  const refAction = React.useRef<boolean>(false);
-
-  React.useEffect(() => {
-    if (isLoadingRecord && refAction.current) {
-      return;
-    }
-    refAction.current = false;
-  }, [isLoadingRecord]);
-
-  const handlePressConfirm = React.useCallback(() => {
-    refAction.current = true;
-    dispatch(
-      (record?.id
-        ? planningActions.updatePlanningColumnRecordAction
-        : planningActions.finishPlanningColumnAction)({
-        recordId: record?.id,
-        planningId,
-        planningColumnId: column.id,
-        isFinish: record?.id ? !record.isFinish : true,
-      }),
+    const handleRecordByPlanningColumn = React.useMemo(
+      () => getRecordByPlanningColumn(planningId, column.id),
+      [column.id, planningId],
     );
-    (!record?.isFinish || !record?.id) && onFinishColumn();
-  }, [column.id, dispatch, planningId, record, onFinishColumn]);
+    const records = useSelector(handleRecordByPlanningColumn);
+    const record = React.useMemo(() => records?.[0] || null, [records]);
 
-  const handlePress = React.useCallback(() => {
-    Alert.alert(
-      record?.isFinish
-        ? `¿Quieres borrar tu registro en "${column.columnName}"?`
-        : `¿Finalizaste el bloque "${column.columnName}"?`,
-      '',
-      [
-        {
-          onPress: handlePressConfirm,
-          text: 'Si',
-        },
-        {
-          text: 'No',
-        },
+    const refAction = React.useRef<boolean>(false);
+
+    React.useEffect(() => {
+      if (isLoadingRecord && refAction.current) {
+        return;
+      }
+      refAction.current = false;
+    }, [isLoadingRecord]);
+
+    const handlePressConfirm = React.useCallback(() => {
+      refAction.current = true;
+      dispatch(
+        (record?.id
+          ? planningActions.updatePlanningColumnRecordAction
+          : planningActions.finishPlanningColumnAction)({
+          recordId: record?.id,
+          planningId,
+          planningColumnId: column.id,
+          isFinish: record?.id ? !record.isFinish : true,
+        }),
+      );
+      (!record?.isFinish || !record?.id) && onFinishColumn();
+    }, [column.id, dispatch, planningId, record, onFinishColumn]);
+
+    const handlePress = React.useCallback(() => {
+      Alert.alert(
+        record?.isFinish
+          ? `${t('common.deleteRecordPrev')} "${column.columnName}"?`
+          : `${t('common.finishBlock')} "${column.columnName}"?`,
+        '',
+        [
+          {
+            onPress: handlePressConfirm,
+            text: t('button.yes') as string,
+          },
+          {
+            text: 'No',
+          },
+        ],
+      );
+    }, [column.columnName, handlePressConfirm, record?.isFinish, t]);
+
+    const buttonStyles = React.useMemo(
+      () => [
+        record?.isFinish ? styles.buttonChecked : styles.buttonUnChecked,
+        scheme === 'dark' && !record?.isFinish && styles.buttonDark,
+        scheme === 'dark' && record?.isFinish && styles.buttonCheckedDark,
       ],
+      [scheme, record],
     );
-  }, [column.columnName, handlePressConfirm, record]);
 
-  const buttonStyles = React.useMemo(
-    () => [
-      record?.isFinish ? styles.buttonChecked : styles.buttonUnChecked,
-      scheme === 'dark' && !record?.isFinish && styles.buttonDark,
-      scheme === 'dark' && record?.isFinish && styles.buttonCheckedDark,
-    ],
-    [scheme, record],
-  );
+    if (isLoadingRecord && refAction.current) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator
+            size="small"
+            color={scheme === 'dark' ? 'white' : 'black'}
+          />
+        </View>
+      );
+    }
 
-  if (isLoadingRecord && refAction.current) {
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator
-          size="small"
-          color={scheme === 'dark' ? 'white' : 'black'}
+      <TouchableOpacity onPress={handlePress} style={buttonStyles}>
+        <Icon
+          name="check"
+          size={fontNormalize(11)}
+          style={margin.mt3}
+          color={EStyleSheet.value(
+            scheme === 'dark' && !record?.isFinish
+              ? '$colors_primary'
+              : scheme === 'dark'
+              ? '$colors_primary'
+              : '$colors_white',
+          )}
         />
-      </View>
+      </TouchableOpacity>
     );
-  }
-
-  return (
-    <TouchableOpacity onPress={handlePress} style={buttonStyles}>
-      <Icon
-        name="check"
-        size={fontNormalize(11)}
-        style={margin.mt3}
-        color={EStyleSheet.value(
-          scheme === 'dark' && !record?.isFinish
-            ? '$colors_primary'
-            : scheme === 'dark'
-            ? '$colors_primary'
-            : '$colors_white',
-        )}
-      />
-    </TouchableOpacity>
-  );
-});
+  }),
+);
 
 const styles = StyleSheet.create({
   buttonDark: {

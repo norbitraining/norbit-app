@@ -20,6 +20,7 @@ import {
   screenWidth,
   styles,
   createLocalWeek,
+  Language,
 } from './helpers';
 
 import {Header} from './Header';
@@ -34,6 +35,7 @@ import {format} from 'date-fns';
 import {StyleSheet} from 'utils';
 import {useSelector} from 'store/reducers/rootReducers';
 import {PlanningFilter} from './PlanningFilter';
+import {WithTranslation, withTranslation} from 'react-i18next';
 
 const getItemLayout = (_: any, index: number) => ({
   length: itemWidth,
@@ -44,8 +46,10 @@ const getItemLayout = (_: any, index: number) => ({
 const keyExtractor = (_: Date, index: number) =>
   `${_.toDateString()} - ${index}`;
 
-const CalendarComponent: FC<CalendarProps> = memo(
-  ({date, language, onPressDate, selectedColor, onChangePlanningFilter}) => {
+interface CalendarComponentProps extends CalendarProps, WithTranslation {}
+
+const CalendarComponent: FC<CalendarComponentProps> = memo(
+  ({i18n, date, onPressDate, selectedColor, onChangePlanningFilter}) => {
     const scheme = useColorScheme();
     const [selectedDate, setSelectedDate] = useState(date);
     // to get current page's month
@@ -53,6 +57,8 @@ const CalendarComponent: FC<CalendarProps> = memo(
     const flatListRef: LegacyRef<any> = useRef<FlatList>();
 
     const isBlocked = useSelector(x => x.coaches.coachSelected?.blocked);
+
+    const language = React.useMemo(() => i18n.language as Language, [i18n]);
 
     const wholeWeek = useMemo(
       () => createWholeWeek(selectedDate),
@@ -261,4 +267,4 @@ const customStyles = StyleSheet.create({
   },
 });
 
-export default CalendarComponent;
+export default withTranslation()(CalendarComponent);

@@ -10,6 +10,7 @@ export enum Screen {
   CALENDAR = 'Calendar',
   CALENDAR_STACK = 'CalendarStack',
   SETTINGS = 'Settings',
+  UPDATE_APP = 'UpdateApp',
   SETTINGS_STACK = 'SettingsStack',
   CHANGE_PASSWORD_SETTINGS = 'ChangePasswordSettings',
 }

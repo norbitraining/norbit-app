@@ -10,6 +10,7 @@ export type AppRootParamList = {
   [Screen.CHANGE_PASSWORD_SETTINGS]: undefined;
   [Screen.CALENDAR_STACK]: undefined;
   [Screen.SETTINGS_STACK]: undefined;
+  [Screen.UPDATE_APP]: {storeUrl: string};
 };
 
 declare global {

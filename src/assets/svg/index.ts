@@ -9,12 +9,14 @@ import VideoSvg from './video.svg';
 import EmptyPlanningSvg from './empty-planning.svg';
 import SendSvg from './send.svg';
 import BlockedPlanningSvg from './blocked-planning.svg';
+import UpdateAppSvg from './update.svg';
 
 const Svg = {
   BlockedPlanningSvg,
   PasswordSvg,
   ForgotPasswordSvg,
   ExerciseCardSvg,
+  UpdateAppSvg,
   VideoSvg,
   SuccessSvg,
   WeightSvg,

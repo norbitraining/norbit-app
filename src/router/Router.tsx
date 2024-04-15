@@ -19,11 +19,13 @@ import {
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import BootSplash from 'react-native-bootsplash';
+import VersionCheck from 'react-native-version-check';
 
 import SignInScreen from 'screens/Auth/SignIn';
 import SignInChangePasswordScreen from 'screens/Auth/SignInChangePassword';
 import ForgotPasswordScreen from 'screens/Auth/ForgotPassword';
 import ConfirmationSuccessScreen from 'screens/Auth/ConfirmationSuccess';
+import UpdateAppScreen from 'screens/UpdateApp';
 import CalendarStack from './stack/CalendarStack';
 import SettingsStack from './stack/SettingsStack';
 import TabBar from 'components/TabBar';
@@ -124,6 +126,23 @@ const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
     name: currentUser.isLoggedIn ? Screen.CALENDAR : Screen.SIGN_IN,
   });
 
+  const handleVersionCheck = async () => {
+    try {
+      const hasUpdate = await VersionCheck.needUpdate();
+
+      console.log(hasUpdate);
+      if (!hasUpdate.isNeeded) {
+        return;
+      }
+
+      navigationRef.navigate(Screen.UPDATE_APP, {
+        storeUrl: hasUpdate.storeUrl,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const mainColorScheme = useMemo(
     () => generateMainStyleScheme({colorScheme, router}),
     [colorScheme, router],
@@ -158,6 +177,7 @@ const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
       <StatusBar barStyle={mainColorScheme.statusBarStyle} animated />
       <NavigationContainer
         theme={DarkTheme}
+        onReady={handleVersionCheck}
         ref={navigationRef}
         onStateChange={onStateChange}>
         <SafeAreaView style={mainColorScheme.container}>
@@ -184,6 +204,13 @@ const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
             <Stack.Screen
               name={Screen.CALENDAR}
               component={BottomTabNavigator}
+            />
+            <Stack.Screen
+              name={Screen.UPDATE_APP}
+              component={UpdateAppScreen}
+              options={{
+                presentation: 'modal',
+              }}
             />
           </Stack.Navigator>
         </SafeAreaView>

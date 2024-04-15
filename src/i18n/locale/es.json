@@ -38,7 +38,9 @@
       "male": "Masculino",
       "female": "Femenino",
       "genderSelection": "Selección de género",
-      "selectMeasurement": "Selecciona un tipo de medida"
+      "selectMeasurement": "Selecciona un tipo de medida",
+      "newUpdate": "Nueva actualización",
+      "newUpdateDescription": "Descarga la última versión de nuestra aplicación en la tienda para disfrutar de nuevas funciones y mejoras de rendimiento. Mantén tu experiencia óptima con nuestra app actualizada."
     },
     "header": {
       "editProfile": "Editar Perfil",
@@ -72,7 +74,9 @@
       "addNote": "Agregar nota",
       "editNote": "Editar nota",
       "yes": "Sí",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "update": "Actualizar",
+      "skip": "Saltar"
     },
     "validations": {
       "emailRequired": "El correo electrónico es requerido.",

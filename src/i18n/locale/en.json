@@ -38,7 +38,9 @@
       "male": "Male",
       "female": "Female",
       "genderSelection": "Gender selection",
-      "selectMeasurement": "Select measurement"
+      "selectMeasurement": "Select measurement",
+      "newUpdate": "New Update Available",
+      "newUpdateDescription": "Download the latest version of our app from the store to enjoy new features and performance improvements. Keep your experience optimal with our updated app."
     },
     "header": {
       "editProfile": "Edit Profile",
@@ -72,7 +74,9 @@
       "addNote": "Add note",
       "editNote": "Edit note",
       "yes": "Yes",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "update": "Update",
+      "skip": "Skip"
     },
     "validations": {
       "emailRequired": "Email is required.",

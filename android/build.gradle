@@ -8,6 +8,7 @@ buildscript {
         targetSdkVersion = 34
         ndkVersion = "23.1.7779620"
         FLIPPER_VERSION = findProperty("FLIPPER_VERSION") ?: "0.182.0"
+        hermesEnabled = findProperty("hermesEnabled")?.toBoolean() ?: true
     }
     repositories {
         google()

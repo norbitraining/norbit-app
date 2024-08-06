@@ -11,7 +11,7 @@ workflows:
         - android
       vars:
         PACKAGE_NAME: "com.norbitapp"
-      node: 16
+      node: 18
     triggering:
       events:
         - tag

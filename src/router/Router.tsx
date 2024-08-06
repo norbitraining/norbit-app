@@ -130,7 +130,6 @@ const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
     try {
       const hasUpdate = await VersionCheck.needUpdate();
 
-      console.log(hasUpdate);
       if (!hasUpdate.isNeeded) {
         return;
       }

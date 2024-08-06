@@ -1,0 +1,179 @@
+workflows:
+  android-prod:
+    name: Android Release
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      groups:
+        - global
+        - android
+      vars:
+        PACKAGE_NAME: "com.norbitapp"
+      node: 16
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: "master"
+    scripts:
+      - name: Install dependencies
+        script: |
+          yarn install
+
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$FCI_BUILD_DIR/android/local.properties"
+
+      - name: Set up keystore
+        script: |
+          echo $PLAY_STORE_KEYSTORE | base64 --decode > $FCI_BUILD_DIR/android/app/norbit-key.keystore
+          cat >> "$FCI_BUILD_DIR/android/app/key.properties" <<EOF
+          storePassword=$PLAY_STORE_KEYSTORE_PASS
+          keyPassword=$PLAY_STORE_KEY_PASS
+          keyAlias=norbit-alias
+          storeFile=$FCI_BUILD_DIR/android/app/norbit-key.keystore
+          EOF
+
+      - name: Type-check app code
+        script: "yarn run lint"
+
+      - name: Build Android release
+        script: |
+          sudo apt-get update && sudo apt-get install -y jq
+
+          # Get the latest build details from Google Play
+          LATEST_BUILD_DETAILS=$(google-play get-latest-build-details --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(echo $LATEST_BUILD_DETAILS | jq '.versionCode')
+          CURRENT_VERSION_NAME=$(echo $LATEST_BUILD_DETAILS | jq -r '.versionName')
+
+          if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]
+          then
+            UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+          else
+            UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
+          fi
+
+          # Split the current version name into major, minor, and patch
+          IFS='.' read -r -a VERSION_ARRAY <<< "$CURRENT_VERSION_NAME"
+          MAJOR=${VERSION_ARRAY[0]}
+          MINOR=${VERSION_ARRAY[1]}
+          PATCH=${VERSION_ARRAY[2]}
+
+          # Increment the patch version
+          PATCH=$((PATCH + 1))
+
+          if [ $PATCH -gt 9 ]; then
+            PATCH=0
+            MINOR=$((MINOR + 1))
+            if [ $MINOR -gt 9 ]; then
+              MINOR=0
+              MAJOR=$((MAJOR + 1))
+            fi
+          fi
+
+          UPDATED_VERSION_NAME="$MAJOR.$MINOR.$PATCH"
+
+          # Update the gradle.properties file with the new version
+          echo "versionCode=$UPDATED_BUILD_NUMBER" > $FCI_BUILD_DIR/android/gradle.properties
+          echo "versionName=$UPDATED_VERSION_NAME" >> $FCI_BUILD_DIR/android/gradle.properties
+
+          cd android
+          ./gradlew bundleRelease -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=$UPDATED_VERSION_NAME
+
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+
+    publishing:
+      google_play:
+        # See the following link for information regarding publishing to Google Play - https://docs.codemagic.io/publishing-yaml/distribution/#google-play
+        credentials: $SERVICE_ACCOUNT_JSON_KEY
+        track: internal
+        changes_not_sent_for_review: true
+      email:
+        recipients:
+          - egarcia@norbitraining.com
+        notify:
+          success: true
+          failure: false
+
+  ios-prod:
+    name: iOS Release
+    instance_type: mac_mini_m1
+    max_build_duration: 120
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      groups:
+        - global
+        - ios
+      vars:
+        # Env vars for automatic iOS code signing
+        # See the following link for more details - https://docs.codemagic.io/code-signing-yaml/signing-ios/
+        XCODE_WORKSPACE: "norbitApp.xcworkspace" # <-- Put the name of your Xcode workspace here
+        # There's supposedly no scheme name so what gives?
+        XCODE_SCHEME: "norbitApp" # <-- Put the name of your Xcode scheme here
+        BUNDLE_IOS_ID: "norbitApp" # <-- Put your Bundle Id here e.g com.domain.myapp
+        APP_STORE_APP_ID: 6448375865 # <-- Put the app id number here. This is found in App Store Connect > App > General > App Information
+      node: 18
+      xcode: 15.4
+      cocoapods: 1.14.3
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: "master"
+    scripts:
+      - name: Install dependencies
+        script: |
+          yarn install
+      - name: Type-check app code
+        script: |
+          yarn run lint
+      - name: Install CocoaPods dependencies
+        script: |
+          npx pod-install
+      - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
+        script: |
+          keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_IOS_ID --type IOS_APP_STORE --create
+      - name: Use system default keychain
+        script: |
+          keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: |
+          xcode-project use-profiles --warn-only
+      - name: Increment build number
+        script: |
+          #!/bin/sh
+          set -e
+          set -x
+          cd $FCI_BUILD_DIR/ios
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID")
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+          --workspace "$FCI_BUILD_DIR/ios/$XCODE_WORKSPACE" \
+          --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        # Configuration related to App Store (optional)
+        # Note: This action is performed during post-processing.
+        submit_to_app_store: false
+        beta_groups:
+          - PROD
+      email:
+        recipients:
+          - egarcia@norbitraining.com
+        notify:
+          success: true
+          failure: false

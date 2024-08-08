@@ -31,42 +31,24 @@ workflows:
 
       - name: Build Android release
         script: |
-          LATEST_BUILD_DETAILS=$(google-play get-latest-build-details --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
-          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(echo $LATEST_BUILD_DETAILS | jq -r '.versionCode')
-          CURRENT_VERSION_NAME=$(echo $LATEST_BUILD_DETAILS | jq -r '.versionName')
-
-          if [ -z "$LATEST_GOOGLE_PLAY_BUILD_NUMBER" ]; then
-            UPDATED_BUILD_NUMBER=$BUILD_NUMBER
-          else
-            UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
+          if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]
+            then
+              # fallback in case no build number was found from google play. Alternatively, you can `exit 1` to fail the build
+              UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+              MAJOR_VERSION=1
+              MINOR_VERSION=0
+              PATCH_VERSION=$UPDATED_BUILD_NUMBER
+            else
+              # Split the version name into components
+              LATEST_VERSION_NAME=$(google-play get-latest-version-name --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
+              MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
+              MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
+              PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)
+              UPDATED_BUILD_NUMBER=$(($PATCH_VERSION + 1))
           fi
-
-          # Split the current version name into major, minor, and patch
-          IFS='.' read -r -a VERSION_ARRAY <<< "$CURRENT_VERSION_NAME"
-          MAJOR=${VERSION_ARRAY[0]}
-          MINOR=${VERSION_ARRAY[1]}
-          PATCH=${VERSION_ARRAY[2]}
-
-          # Increment the patch version
-          PATCH=$((PATCH + 1))
-
-          if [ $PATCH -gt 9 ]; then
-            PATCH=0
-            MINOR=$((MINOR + 1))
-            if [ $MINOR -gt 9 ]; then
-              MINOR=0
-              MAJOR=$((MAJOR + 1))
-            fi
-          fi
-
-          UPDATED_VERSION_NAME="$MAJOR.$MINOR.$PATCH"
-
-          # Update the gradle.properties file with the new version
-          echo "versionCode=$UPDATED_BUILD_NUMBER" > $FCI_BUILD_DIR/android/gradle.properties
-          echo "versionName=$UPDATED_VERSION_NAME" > $FCI_BUILD_DIR/android/gradle.properties
-
           cd android
-          ./gradlew bundleRelease -PversionCode=$UPDATED_BUILD_NUMBER -PversionName=$UPDATED_VERSION_NAME
+          ./gradlew bundleRelease -PversionCode=$LATEST_GOOGLE_PLAY_BUILD_NUMBER -PversionName=$MAJOR_VERSION.$MINOR_VERSION.$UPDATED_BUILD_NUMBER
 
     artifacts:
       - android/app/build/outputs/**/*.aab

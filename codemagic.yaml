@@ -29,7 +29,7 @@ workflows:
       - name: Type-check app code
         script: "yarn run lint"
 
-      - name: Build Android release
+      - name: Update version
         script: |
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
           LATEST_VERSION_NAME=$(google-play get-latest-version-name --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")

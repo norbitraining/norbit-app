@@ -11,7 +11,7 @@ workflows:
         - android
       vars:
         PACKAGE_NAME: "com.norbitapp"
-      node: 18
+      node: 18.17.0
     triggering:
       events:
         - tag
@@ -95,7 +95,7 @@ workflows:
         XCODE_SCHEME: "norbitApp" # <-- Put the name of your Xcode scheme here
         BUNDLE_IOS_ID: "norbitApp" # <-- Put your Bundle Id here e.g com.domain.myapp
         APP_STORE_APP_ID: 6448375865 # <-- Put the app id number here. This is found in App Store Connect > App > General > App Information
-      node: 18
+      node: 18.17.0
       xcode: 15.4
       cocoapods: 1.14.3
     triggering:

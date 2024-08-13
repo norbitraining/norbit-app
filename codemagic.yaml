@@ -69,7 +69,7 @@ workflows:
         # See the following link for information regarding publishing to Google Play - https://docs.codemagic.io/publishing-yaml/distribution/#google-play
         credentials: $SERVICE_ACCOUNT_JSON_KEY
         track: internal
-        changes_not_sent_for_review: true
+        changes_not_sent_for_review: false
       email:
         recipients:
           - egarcia@norbitraining.com
@@ -150,8 +150,6 @@ workflows:
         # Configuration related to App Store (optional)
         # Note: This action is performed during post-processing.
         submit_to_app_store: false
-        beta_groups:
-          - PROD
       email:
         recipients:
           - egarcia@norbitraining.com

@@ -48,7 +48,7 @@ workflows:
             echo "$TRACK_OUTPUT"
 
             # Intentar extraer el nombre de la versión en estado draft
-            LATEST_VERSION_NAME=$(echo "$TRACK_OUTPUT" | grep -A 2 '"Status": "draft"' | grep '"Name":' | awk -F ': "' '{print $2}' | tr -d '", ')
+            LATEST_VERSION_NAME=$(echo "$TRACK_OUTPUT" | awk '/Status: draft/{getline; getline; print $2}' | tr -d '",')
 
             # Imprimir el valor de LATEST_VERSION_NAME para verificar
             echo "LATEST_VERSION_NAME extracted: $LATEST_VERSION_NAME"

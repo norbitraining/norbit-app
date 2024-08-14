@@ -43,7 +43,7 @@ workflows:
             UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
             
             LATEST_VERSION_NAME=$(google-play tracks get --package-name "$PACKAGE_NAME" --track "production" --credentials "$SERVICE_ACCOUNT_JSON_KEY" | grep -Eo '"Name": "[^"]+"' | head -1 | awk -F ': "' '{print $2}' | tr -d '"')
-           
+            echo "$LATEST_VERSION_NAME"
             MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
             MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
             PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)

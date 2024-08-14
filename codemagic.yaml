@@ -32,23 +32,23 @@ workflows:
       - name: Update version
         script: |
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
-          LATEST_VERSION_NAME=$(google-play get-latest-version-name --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
 
           if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]
-            then
-              # fallback in case no build number was found from google play. Alternatively, you can `exit 1` to fail the build
-              UPDATED_BUILD_NUMBER=$BUILD_NUMBER
-              MAJOR_VERSION=1
-              MINOR_VERSION=0
-              PATCH_VERSION=$UPDATED_BUILD_NUMBER
-            else
-              # Split the version name into components
-              UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
-              
-              MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
-              MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
-              PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)
-              PATCH_VERSION=$(($PATCH_VERSION + 1))
+           then
+            UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+            MAJOR_VERSION=1
+            MINOR_VERSION=0
+            PATCH_VERSION=$UPDATED_BUILD_NUMBER
+          else
+            UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
+            
+            LATEST_VERSION_NAME=$(google-play tracks --package-name "$PACKAGE_NAME" --track "production" --credentials "$SERVICE_ACCOUNT_JSON_KEY" | grep -oP '(?<="versionName": ")[^"]*' | head -1)
+           
+            MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
+            MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
+            PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)
+           
+            PATCH_VERSION=$(($PATCH_VERSION + 1))
           fi
 
           NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION

@@ -42,8 +42,17 @@ workflows:
           else
             UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
             
-            LATEST_VERSION_NAME=$(google-play tracks get --package-name "$PACKAGE_NAME" --track "production" --credentials "$SERVICE_ACCOUNT_JSON_KEY" | jq -r '.Releases[] | select(.Status == "draft") | .Name' | head -1)
-            echo "$LATEST_VERSION_NAME"
+            # Imprimir la salida del comando google-play tracks get para depuración
+            echo "Fetching latest version from production track:"
+            TRACK_OUTPUT=$(google-play tracks get --package-name "$PACKAGE_NAME" --track "production" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
+            echo "$TRACK_OUTPUT"
+
+            # Intentar extraer el nombre de la versión en estado draft
+            LATEST_VERSION_NAME=$(echo "$TRACK_OUTPUT" | grep -A 2 '"Status": "draft"' | grep '"Name":' | awk -F ': "' '{print $2}' | tr -d '", ')
+
+            # Imprimir el valor de LATEST_VERSION_NAME para verificar
+            echo "LATEST_VERSION_NAME extracted: $LATEST_VERSION_NAME"
+            
             MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
             MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
             PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)

@@ -11,6 +11,7 @@ workflows:
         - android
       vars:
         PACKAGE_NAME: "com.norbitapp"
+        SERVICE_ACCOUNT_JSON_KEY: $SERVICE_ACCOUNT_JSON_KEY
       node: 18.17.0
     triggering:
       events:
@@ -31,12 +32,9 @@ workflows:
 
       - name: Update version
         script: |
-          echo "$SERVICE_ACCOUNT_JSON_KEY" > /tmp/credentials.json
-          cat /tmp/credentials.json 
-
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
 
-          LATEST_VERSION_NAME=$(yarn -s cd:extract-version $PACKAGE_NAME /tmp/credentials.json)
+          LATEST_VERSION_NAME=$(yarn -s cd:extract-version "$PACKAGE_NAME" "$SERVICE_ACCOUNT_JSON_KEY")
 
           if [ -z "$LATEST_VERSION_NAME" ]; then
             echo "Failed to extract LATEST_VERSION_NAME"

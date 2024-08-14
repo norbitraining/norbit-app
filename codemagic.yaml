@@ -32,33 +32,16 @@ workflows:
       - name: Update version
         script: |
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --credentials "$SERVICE_ACCOUNT_JSON_KEY")
-
-          LATEST_VERSION_NAME=$(yarn -s cd:extract-version "$PACKAGE_NAME" "$SERVICE_ACCOUNT_JSON_KEY")
-
-          if [ -z "$LATEST_VERSION_NAME" ]; then
-            echo "Failed to extract LATEST_VERSION_NAME"
-            exit 1
-          fi
-
           if [ -z $LATEST_GOOGLE_PLAY_BUILD_NUMBER ]
-           then
-            echo "Failed to extract LATEST_GOOGLE_PLAY_BUILD_NUMBER"
-            exit 1
+            then
+              # fallback in case no build number was found from google play. Alternatively, you can `exit 1` to fail the build
+              UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+            else
+              UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
           fi
-
-          UPDATED_BUILD_NUMBER=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
-
-          echo "LATEST_VERSION_NAME extracted: $LATEST_VERSION_NAME"
-            
-          MAJOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 1)
-          MINOR_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 2)
-          PATCH_VERSION=$(echo $LATEST_VERSION_NAME | cut -d '.' -f 3)
-          PATCH_VERSION=$(($PATCH_VERSION + 1))
-
-          NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
 
           sed -i "" "s/versionCode [0-9]*/versionCode $UPDATED_BUILD_NUMBER/" android/app/build.gradle
-          sed -i '' "s/versionName \".*\"/versionName \"$NEW_VERSION_NAME\"/" android/app/build.gradle
+          sed -i '' "s/versionName \".*\"/versionName \"1.3.$NEW_VERSION_NAME\"/" android/app/build.gradle
 
       - name: Build Android release
         script: |

@@ -8,7 +8,6 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "cd:extract-version": "ts-node scripts/extractVersion",
     "env:local": "sh set-enviroment.sh local",
     "env:dev": "sh set-enviroment.sh dev",
     "env:prod": "sh set-enviroment.sh prod",

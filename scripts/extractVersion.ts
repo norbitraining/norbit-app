@@ -3,7 +3,7 @@ import {execSync} from 'child_process';
 function main(packageName: string, serviceAccountKey: string) {
   try {
     const command = `google-play tracks get --package-name "${packageName}" --track "production" --credentials "${serviceAccountKey}"`;
-    const result = execSync(command).toString();
+    const result = execSync(command, {stdio: 'pipe'}).toString();
 
     const data = JSON.parse(result);
     let latestVersionName = '';
@@ -21,8 +21,8 @@ function main(packageName: string, serviceAccountKey: string) {
       console.error('No draft version found.');
       process.exit(1);
     }
-  } catch (error) {
-    console.error('Error processing the command output:', error);
+  } catch (error: any) {
+    console.error('Error processing the command output:', error?.message);
     process.exit(1);
   }
 }

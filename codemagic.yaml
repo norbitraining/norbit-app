@@ -53,8 +53,9 @@ workflows:
 
           NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION
 
+          echo "$NEW_VERSION_NAME"
           sed -i "" "s/versionCode [0-9]*/versionCode $UPDATED_BUILD_NUMBER/" android/app/build.gradle
-          sed -i "" "s/versionName \".*\"/versionName \"$NEW_VERSION_NAME\"/" android/app/build.gradle
+          sed -i '' "s/versionName \".*\"/versionName \"$NEW_VERSION_NAME\"/" android/app/build.gradle
 
       - name: Build Android release
         script: |

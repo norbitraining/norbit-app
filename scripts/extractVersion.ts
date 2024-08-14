@@ -2,7 +2,9 @@ import {execSync} from 'child_process';
 
 function main(packageName: string, serviceAccountKey: string) {
   try {
-    const command = `google-play tracks get --package-name "${packageName}" --track "production" --credentials "${serviceAccountKey}"`;
+    const command = `google-play tracks get --package-name "${packageName}" --track "production" --credentials "${JSON.stringify(
+      serviceAccountKey,
+    )}"`;
     const result = execSync(command, {stdio: 'pipe'}).toString();
 
     const data = JSON.parse(result);

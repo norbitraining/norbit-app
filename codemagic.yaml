@@ -41,7 +41,7 @@ workflows:
           fi
 
           sed -i "" "s/versionCode [0-9]*/versionCode $UPDATED_BUILD_NUMBER/" android/app/build.gradle
-          sed -i '' "s/versionName \".*\"/versionName \"1.3.$NEW_VERSION_NAME\"/" android/app/build.gradle
+          sed -i '' "s/versionName \".*\"/versionName \"1.3.$UPDATED_BUILD_NUMBER\"/" android/app/build.gradle
 
       - name: Build Android release
         script: |

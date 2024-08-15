@@ -71,6 +71,11 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
+      ios_signing:
+        provisioning_profiles:
+          - Provisioning_norbit
+        certificates:
+          - Distribution_norbit
       groups:
         - global
         - ios

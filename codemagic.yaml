@@ -72,6 +72,7 @@ workflows:
       app_store_connect: codemagic
     environment:
       ios_signing:
+        distribution_type: app_store
         provisioning_profiles:
           - Provisioning_norbit
         certificates:
@@ -108,9 +109,6 @@ workflows:
       - name: Set up keychain to be used for codesigning using Codemagic CLI 'keychain' command
         script: |
           keychain initialize
-      - name: Fetch signing files
-        script: |
-          app-store-connect fetch-signing-files $BUNDLE_IOS_ID --type IOS_APP_STORE --create
       - name: Use system default keychain
         script: |
           keychain add-certificates

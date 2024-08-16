@@ -121,6 +121,12 @@ workflows:
           set -e
           set -x
           cd $FCI_BUILD_DIR/ios
+
+          LATEST_VERSION=$(app-store-connect get-latest-app-store-version "$APP_STORE_APP_ID")
+          NEW_VERSION=$(echo $LATEST_VERSION | awk -F. '{printf("%d.%d.%d", $1, $2, $3+1)}')
+
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $NEW_VERSION" "$FCI_BUILD_DIR/ios/$XCODE_SCHEME/Info.plist"
+
           LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APP_ID")
           agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
       - name: Build ipa for distribution

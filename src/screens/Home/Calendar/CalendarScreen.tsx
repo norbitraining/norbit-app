@@ -135,7 +135,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({getPlanningAction}) => {
       return;
     }
     getPlanning();
-  }, [currentCoachSelected, getPlanning]);
+  }, [currentCoachSelected?.id, currentCoachSelected?.blocked, getPlanning]);
 
   const renderItem = useCallback(
     ({item, index, section}: SectionListRenderItemInfo<any, any>) => {

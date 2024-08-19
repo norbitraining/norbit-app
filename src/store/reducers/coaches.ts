@@ -10,6 +10,8 @@ export interface ICoachesRequest {
     lastName: string;
     email: string;
     gender: string;
+    path_photo: string;
+    profile_picture_blob?: string | null;
   };
 }
 

@@ -24,6 +24,13 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {trigger} from 'react-native-haptic-feedback';
 import {planningActions} from 'store/reducers/planning';
 import {WithTranslation, withTranslation} from 'react-i18next';
+import FastImage from 'react-native-fast-image';
+
+interface CoachListItemProps {
+  itemCoach: ICoachesRequest;
+  index: number | string;
+  onPressBackdrop: () => void;
+}
 
 interface BottomSheetCoachListProps extends WithTranslation {
   openModal: boolean;
@@ -36,7 +43,6 @@ export default withTranslation()(
     openModal,
     onCloseModal,
   }) {
-    const dispatch = useDispatch();
     const schema = useColorScheme();
     const [keyboardHeight] = useKeyboardHeight();
 
@@ -98,68 +104,6 @@ export default withTranslation()(
       [animatedIndex, onPressBackdrop],
     );
 
-    const renderItemCoach = React.useCallback(
-      (
-        itemCoach: ICoachesRequest,
-        index: number | string,
-        _coachList?: ICoachesRequest[],
-      ) => {
-        const fullName = `${itemCoach.coach?.firstName} ${itemCoach.coach?.lastName}`;
-        const isSelected = index === 'crr';
-
-        const onPress = () => {
-          trigger('impactLight', {
-            enableVibrateFallback: true,
-            ignoreAndroidSystemSettings: false,
-          });
-          onPressBackdrop();
-          dispatch(coachesActions.selectCoachAction(itemCoach));
-          dispatch(planningActions.getPlanningSuccessAction([]));
-        };
-        const itemCoachStyle = {
-          ...(schema === 'dark' ? styles.itemCoachDark : styles.itemCoach),
-          borderBottomWidth:
-            (typeof index === 'number' &&
-              _coachList &&
-              index !== _coachList.length - 1) ||
-            typeof index === 'string'
-              ? 1
-              : 0,
-        };
-        return (
-          <TouchableOpacity
-            key={index}
-            activeOpacity={0.9}
-            disabled={isSelected}
-            style={itemCoachStyle}
-            onPress={onPress}>
-            <View style={GlobalStyles.row}>
-              <View style={styles.initials}>
-                <Text color="white">{getInitials(fullName)}</Text>
-              </View>
-              <Text
-                style={margin.ml12}
-                color={
-                  isSelected
-                    ? EStyleSheet.value('$colors_danger')
-                    : EStyleSheet.value(
-                        schema === 'dark' ? '$colors_white' : '$colors_primary',
-                      )
-                }>
-                {fullName}
-              </Text>
-            </View>
-            {index === 'crr' && (
-              <View style={styles.iconSelected}>
-                <Icon name="check" size={16} color="white" />
-              </View>
-            )}
-          </TouchableOpacity>
-        );
-      },
-      [dispatch, onPressBackdrop, schema],
-    );
-
     return (
       <>
         <BottomSheetModal
@@ -188,9 +132,22 @@ export default withTranslation()(
                 </Text>
               </View>
               <Separator thickness={12} />
-              {currentCoaches.coachSelected &&
-                renderItemCoach(currentCoaches.coachSelected, 'crr')}
-              {coachList.map(renderItemCoach)}
+              {currentCoaches.coachSelected && (
+                <CoachListItem
+                  itemCoach={currentCoaches.coachSelected}
+                  index={'crr'}
+                  onPressBackdrop={onPressBackdrop}
+                />
+              )}
+
+              {coachList.map((item, index) => (
+                <CoachListItem
+                  key={index}
+                  itemCoach={item}
+                  index={index}
+                  onPressBackdrop={onPressBackdrop}
+                />
+              ))}
             </View>
           </BottomSheetView>
         </BottomSheetModal>
@@ -198,6 +155,97 @@ export default withTranslation()(
     );
   }),
 );
+
+const CoachListItem: React.FC<CoachListItemProps> = ({
+  itemCoach,
+  index,
+  onPressBackdrop,
+}) => {
+  const dispatch = useDispatch();
+  const schema = useColorScheme();
+  const currentCoaches = useSelector(x => x.coaches);
+
+  const coachList = React.useMemo(
+    () => [
+      ...(currentCoaches.coachSelected
+        ? currentCoaches.coaches.filter(
+            x => x.id !== currentCoaches.coachSelected?.id,
+          )
+        : currentCoaches.coaches),
+    ],
+    [currentCoaches],
+  );
+
+  const profilePicture = React.useMemo(() => {
+    if (!itemCoach?.coach.profile_picture_blob) {
+      return null;
+    }
+    return itemCoach?.coach.profile_picture_blob;
+  }, [itemCoach?.coach.profile_picture_blob]);
+
+  const fullName = `${itemCoach.coach?.firstName} ${itemCoach.coach?.lastName}`;
+  const isSelected = index === 'crr';
+
+  const onPress = () => {
+    trigger('impactLight', {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    });
+    onPressBackdrop();
+    dispatch(coachesActions.selectCoachAction(itemCoach));
+    dispatch(planningActions.getPlanningSuccessAction([]));
+  };
+
+  const itemCoachStyle = {
+    ...(schema === 'dark' ? styles.itemCoachDark : styles.itemCoach),
+    borderBottomWidth:
+      (typeof index === 'number' &&
+        coachList &&
+        index !== coachList.length - 1) ||
+      typeof index === 'string'
+        ? 1
+        : 0,
+  };
+
+  return (
+    <TouchableOpacity
+      key={index}
+      activeOpacity={0.9}
+      disabled={isSelected}
+      style={itemCoachStyle}
+      onPress={onPress}>
+      <View style={GlobalStyles.row}>
+        <View style={styles.initials}>
+          {profilePicture ? (
+            <FastImage
+              source={{uri: profilePicture}}
+              resizeMode="contain"
+              style={styles.profilePicture}
+            />
+          ) : (
+            <Text color="white">{getInitials(fullName)}</Text>
+          )}
+        </View>
+        <Text
+          style={margin.ml12}
+          color={
+            isSelected
+              ? EStyleSheet.value('$colors_danger')
+              : EStyleSheet.value(
+                  schema === 'dark' ? '$colors_white' : '$colors_primary',
+                )
+          }>
+          {fullName}
+        </Text>
+      </View>
+      {index === 'crr' && (
+        <View style={styles.iconSelected}>
+          <Icon name="check" size={16} color="white" />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
 
 const itemCoachDefault = {
   ...GlobalStyles.rowSb,
@@ -231,5 +279,10 @@ const styles = StyleSheet.create({
   itemCoachDark: {
     ...itemCoachDefault,
     borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  profilePicture: {
+    borderRadius: 100,
+    height: rWidth(33),
+    width: rWidth(33),
   },
 });

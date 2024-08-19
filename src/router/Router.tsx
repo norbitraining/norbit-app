@@ -38,6 +38,7 @@ import {
   validateShownTabBar,
 } from 'utils/constants/screens';
 import {coachesActions} from 'store/reducers/coaches';
+import SplashWelcomeCoach from 'components/SplashWelcomeCoach';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -214,6 +215,7 @@ const Router: React.FC<RouterProps> = ({getCoachesAction}) => {
           </Stack.Navigator>
         </SafeAreaView>
         <SafeAreaView style={mainColorScheme.safeAreaViewBottom} />
+        <SplashWelcomeCoach />
       </NavigationContainer>
     </>
   );

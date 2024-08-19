@@ -1,16 +1,18 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
+import EStyleSheet from 'react-native-extended-stylesheet';
+import {WithTranslation, withTranslation} from 'react-i18next';
+
+import FastImage from 'react-native-fast-image';
+import BottomSheetCoachList from './BottomSheetCoachList';
+
 import Text from 'components/Text';
 
 import {StyleSheet, getInitials} from 'utils';
 import {useSelector} from 'store/reducers/rootReducers';
 import {GlobalStyles} from 'theme/globalStyle';
 import {margin} from 'theme/spacing';
-
-import BottomSheetCoachList from './BottomSheetCoachList';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import {WithTranslation, withTranslation} from 'react-i18next';
 
 interface CoachSelectionProps extends WithTranslation {}
 
@@ -24,6 +26,13 @@ const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({t}) => {
       `${currentCoachSelected?.coach.firstName} ${currentCoachSelected?.coach.lastName}`,
     [currentCoachSelected],
   );
+
+  const profilePicture = React.useMemo(() => {
+    if (!currentCoachSelected?.coach.profile_picture_blob) {
+      return null;
+    }
+    return currentCoachSelected?.coach.profile_picture_blob;
+  }, [currentCoachSelected?.coach.profile_picture_blob]);
 
   const closeModal = React.useCallback(() => {
     setShowModal(false);
@@ -53,9 +62,17 @@ const CoachSelection: React.FC<CoachSelectionProps> = React.memo(({t}) => {
               </Text>
             </View>
             <View style={styles.initials}>
-              <Text color="white" fontSize={12}>
-                {getInitials(fullName)}
-              </Text>
+              {profilePicture ? (
+                <FastImage
+                  source={{uri: profilePicture}}
+                  style={styles.profilePicture}
+                  resizeMode="contain"
+                />
+              ) : (
+                <Text color="white" fontSize={12}>
+                  {getInitials(fullName)}
+                </Text>
+              )}
             </View>
           </>
         )}
@@ -87,8 +104,13 @@ const styles = StyleSheet.create({
     ...margin.ml7,
     backgroundColor: '$colors_black',
     borderRadius: 100,
-    height: 25,
-    width: 25,
+    height: 28,
+    width: 28,
+  },
+  profilePicture: {
+    borderRadius: 100,
+    height: 28,
+    width: 28,
   },
 });
 

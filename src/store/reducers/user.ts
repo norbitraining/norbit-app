@@ -23,6 +23,8 @@ export interface IUserRequest {
   isNew?: boolean;
   height_measurement?: HeightMeasurement;
   weight_measurement?: WeightMeasurement;
+  old_path_photo?: string;
+  profile_picture_blob?: Blob | null;
   gender?: number;
   blocked?: boolean;
   email?: string;

@@ -24,7 +24,7 @@ module.exports = {
     [
       'module:react-native-dotenv',
       {
-        whitelist: ['API_PATH', 'ENV'],
+        whitelist: ['API_PATH', 'ENV', 'WEB_URL'],
         moduleName: 'env',
         path: '.env',
       },

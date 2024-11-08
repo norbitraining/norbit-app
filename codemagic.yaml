@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m1
     environment:
-      java: "17.0.8"
+      java: "11"
       android_signing:
         - norbit-prod
       groups:
@@ -22,6 +22,13 @@ workflows:
       - name: Install dependencies
         script: |
           yarn install
+      - name: Install sdkman
+        script: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install java 17.0.8-open  # Instala Java 17
+          export JAVA_HOME="$HOME/.sdkman/candidates/java/current"
+          java -version
 
       - name: Set Android SDK location
         script: |
